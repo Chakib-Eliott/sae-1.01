@@ -1,6 +1,6 @@
 """
 VERSION TERMINAL
 
-AUTHORS : Eliott & Chakib
+AUTEURS : Eliott & Chakib
 """
 import diamants # Les fonction qui permettent de faire fonctionner le jeu
