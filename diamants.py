@@ -10,6 +10,10 @@ CARTES = [1, 2, 3, 4, 5, 5, 7, 7, 9, 11, 11, 13, 14, 15, 17, 'Araignée', 'Araig
 
 
 class Diamant:
+    """
+    Classe du jeu Diamants
+    """
+
     def __init__(self, nbJoueurs:int, typeJeu:bool):
         self.joueursRestants = nbJoueurs # nombre de joueur restant dans la manche (int)
         self.cartes = list() # paquet de carte (list)
@@ -77,7 +81,9 @@ class Diamant:
 
     def piocheCarte(self):
         """
-        Pioche une carte du deck et la mets sur le tapis
+        Pioche une carte du deck et la mets sur le tapis.
+        Si un monstre sort on vérifie qu'il ne soit pas déjà sortie une fois
+        et si c'est la deuxième fois on retire le monstre des cartes et on défini la fin de manche.
 
         RETURN : 
             - La carte en question
@@ -85,7 +91,12 @@ class Diamant:
         if type(self.cartes[-1]) == int:
             self.repartitionTresor()
         else: 
-            self.tapis[self.cartes[-1]] = -1 
+            self.tapis[self.cartes[-1]] = -1
+            monstre = self.verificationMonstre()
+            if monstre[0] == True:
+                i = CARTES.index(monstre[1])
+                CARTES.pop(i)
+                self.finManche(True)
         return self.cartes.pop(-1)
 
     def sortie(self, joueursSorties:list):
@@ -97,21 +108,21 @@ class Diamant:
         """
         # Calcule le nombre de diamants restants sur le tapis
         tresorParPers = 0
-        for i,j in self.tapis.keys(), self.tapis.values():
-            if j > 0:
-                tresorParPers += j
-                self.tapis[i] = 0
+        for i in self.tapis.items():
+            if i[1] > 0:
+                tresorParPers += i[1]
+                self.tapis[i[0]] = 0
                 
         reste = tresorParPers%len(joueursSorties) 
         tresorParPers -= reste
         tresorParPers //= len(joueursSorties)
         # Remet le reste sur le tapis sur la première carte de valeur qu'on trouve
-        for i,j in self.tapis.keys(), self.tapis.values():
-            if j != -1:
-                self.tapis[i] = reste
+        for i in self.tapis.items():
+            if i[1] != -1:
+                self.tapis[i[0]] = reste
                 break
-        for i in joueursSorties:
-            self.joueurs[i] += tresorParPers
+        for k in joueursSorties:
+            self.joueurs[k] += tresorParPers
             
         
     def jouer(self, choix, joueur):
@@ -130,12 +141,12 @@ class Diamant:
                 self.joueurs[joueur][2] = 1
                 return joueur
 
-    def finManche(self):
+    def finManche(self,monstre=False):
         """
         Applique tous les paramètres par défaut pour la création d'une nouvelle manche.
         Affiche le vainqueur et le classement en cas de fin de partie.
         """
-        assert self.joueursRestants == 0
+        assert self.joueursRestants == 0 or monstre == True
         if self.manchesRestants != 0:
             for i in range(1, len(self.joueurs)+1):
                 self.joueurs[i][2] == 0 # On remet tous les joueurs en jeu
