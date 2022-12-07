@@ -3,6 +3,8 @@ MAIN
 
 AUTEURS : Eliott & Chakib
 NOM DU JEU : DIAMANTS
+
+Ce jeu est développé dans le cadre d'une SAé (un projet) avec l'IUT de Vélizy.
 """
 
 import os
