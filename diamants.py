@@ -29,6 +29,7 @@ class Diamant:
     """
 
     def __init__(self, nbJoueurs: int, typeJeu: bool) -> None:
+        assert nbJoueurs>=3 and nbJoueurs<=8, "Le jeu doit contenir au moins 3 joueurs et au maximum 8 joueurs."
         self.joueursRestants = nbJoueurs  # nombre de joueur restant dans la manche (int)
         self.cartes = list()  # paquet de carte (list)
         self.typeJeu = typeJeu  # 0 joueurs | 1 IA (int)
@@ -44,6 +45,7 @@ class Diamant:
         Args:
             nbJoueurs (int): Nombre de joueur.
         """
+        assert nbJoueurs>=3 and nbJoueurs<=8, "Le jeu doit contenir au moins 3 joueurs et au maximum 8 joueurs."
         for i in range(1, nbJoueurs+1):
             self.joueurs[i] = [0, 0, 0]  # [Trésor (nb diamants), nombre de reliques, etat (0 mine, 1 sortie)]
 
@@ -57,6 +59,7 @@ class Diamant:
         Returns:
             _type_: Les caractéristiques du joueur.
         """
+        assert joueur>=0 and joueur<=7 and joueur in self.joueurs.keys(), "Le joueur doit exister."
         return self.joueurs[joueur]
     
     def verificationMonstre(self) -> tuple[bool, str]:
@@ -118,6 +121,9 @@ class Diamant:
         Args:
             joueursSorties (list): Liste des joueurs sortis.
         """
+        #CREER DANS LE INIT LE NOMBRE DE JOUEUR POUR EN PLUS POUVOIR RESET LES JOUEURS RESTANT FACIELEMENT
+        # assert len(joueursSorties) <= , "Il ne peut pas avoir plus de joueur sorti que de joueurs en jeu"
+        
         # Calcule le nombre de diamants restants sur le tapis
         tresorParPers = 0
         for i in self.tapis.items():
