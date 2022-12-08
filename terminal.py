@@ -11,7 +11,7 @@ import time
 print("INITIALISATION DE LA PARTIE ...")
 print()
 
-inputNombreJoueurs = 5
+inputNombreJoueurs = 3
 while inputNombreJoueurs < 2 or inputNombreJoueurs > 8:
     try:
         inputNombreJoueurs = int(input("Choisir le nombre de joueurs (2 à 8) : "))
@@ -20,11 +20,11 @@ while inputNombreJoueurs < 2 or inputNombreJoueurs > 8:
 
 
 def clear():
-    try: 
-        os.system('clear')
-    except:
-        print()
-
+    # try: 
+    #     os.system('clear')
+    # except:
+    #     print()
+    print('##############################')
 clear()
 print("BON JEU !")
 print()
@@ -49,9 +49,9 @@ def affichageCourant(instruction = ''):
     print("\n"*2)
 
 def pioche():
-    carte = Jeu.piocheCarte()
-        
-for i in range(1):
+    return Jeu.piocheCarte()
+
+while Jeu.joueursRestants != 0:
     Jeu.piocheCarte()
     sortis = []
     for i in Jeu.joueurs.items():
@@ -64,22 +64,22 @@ for i in range(1):
             print("Relique(s) en votre possession :", caras[1])
             print('\n'*2)
             print("Joueur", i[0], ": que souhaitez vous faire ?")
-            choix = str(input("rester, sortir"))
-            while choix != 'rester' and choix != 'sortir':
-                choix = str(input("rester, sortir"))
-            if choix == 'sortir':
+            choix = str(input("rester, sortir\n >> "))
+            while choix != 'rester' and choix != 'sortir' and choix != 's' and choix != 'r':
+                choix = str(input("rester, sortir\n >> "))
+            if choix == 'sortir' or choix == 's':
                 Jeu.jouer(1, i[0])
-                time.sleep(0.7)
+                time.sleep(0.1)
                 print()
                 print("Vous avez choisi de quitter ce tour !")
                 sortis.append(i[0])
             else:
-                time.sleep(0.7)
+                time.sleep(0.1)
                 print()
                 print("Vous avez choisi de rester dans le jeu !")
-            time.sleep(0.5)
-    print(sortis)
+            time.sleep(0.1)
     Jeu.sortie(sortis)
+    print(Jeu.tapis)
 
 
 """

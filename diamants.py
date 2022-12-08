@@ -30,12 +30,14 @@ class Diamant:
 
     def __init__(self, nbJoueurs: int, typeJeu: bool) -> None:
         assert nbJoueurs>=3 and nbJoueurs<=8, "Le jeu doit contenir au moins 3 joueurs et au maximum 8 joueurs."
+        self.nbJoueurs = nbJoueurs  # nombre de joueur dans la partie (int)
         self.joueursRestants = nbJoueurs  # nombre de joueur restant dans la manche (int)
         self.cartes = list()  # paquet de carte (list)
         self.typeJeu = typeJeu  # 0 joueurs | 1 IA (int)
         self.manchesRestants = 5  # nombre manches restantes (int)
         self.joueurs = {}  # caractéristique des joueurs (dict) - joueur : nb de diamants, nb de relique, en jeu ou non
         self.tapis = {}  # tapis des cartes sorties (dict) - carte : nombre de diamants restants (-1 si monstre)
+        self.tapis2 = []
         self.creationJoueurs(nbJoueurs)  # appel de la fonction pour initialiser les caractéristiques (self.joueur)
     
     def creationJoueurs(self, nbJoueurs: int) -> None:
@@ -62,18 +64,26 @@ class Diamant:
         assert joueur>=0 and joueur<=7 and joueur in self.joueurs.keys(), "Le joueur doit exister."
         return self.joueurs[joueur]
     
-    def verificationMonstre(self) -> tuple[bool, str]:
+    def verificationMonstre(self) -> tuple:
         """
-        Vérifie si une carte monstre est déjà sortie.
+        Vérifie si une carte monstre est déjà sortie et indique du quel monstre s'agit-il.
 
         Returns:
             tuple[bool, str]: la carte est déjà sortie ou non, la carte(s) en question.
         """
+        sortie = False
         monstresSorties = []
-        for i in self.tapis.keys():
-            if not type(i) == int:
-                monstresSorties.append(i)
-        return True, monstresSorties
+        monstre = None
+        for i in self.tapis2:
+            if not type(i[0]) == int:
+                monstresSorties.append(i[0])
+        print(monstresSorties)
+        for j in range(len(monstresSorties)):
+            for k in range(len(monstresSorties)):
+                if j!=k and monstresSorties[j]==monstresSorties[k]:
+                    monstre = monstresSorties[j]
+                    sortie = True
+        return sortie, monstre
 
     def melangeCarte(self) -> None:
         """
@@ -81,7 +91,7 @@ class Diamant:
         """
         self.cartes = sample(CARTES, len(CARTES))
     
-    def repartitionTresor(self) -> tuple[int, int]:
+    def repartitionTresor(self) -> tuple:
         """
         Répartit la dernière carte du tapis sortie entre les joueurs et met le reste sur la carte.
 
@@ -89,7 +99,7 @@ class Diamant:
             tuple[int, int]: Trésor par personnes, trésor restant sur la carte.
         """
         tresorPerPers = self.cartes[-1] // self.joueursRestants  # Défini le nb de diamants par personne
-        self.tapis[self.cartes[-1]] = self.cartes[-1] % self.joueursRestants  # Défini le reste des diamants et l'assigne à la carte sur le tapis
+        self.tapis[-1][1] = self.cartes[-1] % self.joueursRestants  # Défini le reste des diamants et l'assigne à la carte sur le tapis
         for i in range(1,self.joueursRestants+1):
             self.joueurs[i][0] += tresorPerPers
         return tresorPerPers, self.tapis[self.cartes[-1]]
@@ -105,13 +115,18 @@ class Diamant:
         """
         if type(self.cartes[-1]) == int:
             self.repartitionTresor()
-        else: 
+        else:
+            print(self.cartes[-1])
             self.tapis[self.cartes[-1]] = -1
             monstre = self.verificationMonstre()
+            print(monstre)
             if monstre[0] == True:
+                print(monstre[1])
+                print(CARTES)
+                print(CARTES.index(monstre[1]))
                 i = CARTES.index(monstre[1])
                 CARTES.pop(i)
-                self.finManche(True)
+                return self.finManche(True)
         return str(self.cartes.pop(-1))
 
     def sortie(self, joueursSorties: list) -> None:
@@ -121,26 +136,26 @@ class Diamant:
         Args:
             joueursSorties (list): Liste des joueurs sortis.
         """
-        #CREER DANS LE INIT LE NOMBRE DE JOUEUR POUR EN PLUS POUVOIR RESET LES JOUEURS RESTANT FACIELEMENT
-        # assert len(joueursSorties) <= , "Il ne peut pas avoir plus de joueur sorti que de joueurs en jeu"
-        
+        assert len(joueursSorties) <= self.nbJoueurs, "Il ne peut pas avoir plus de joueur sorti que de joueurs en jeu"
+        if len(joueursSorties) == 0:
+            return
         # Calcule le nombre de diamants restants sur le tapis
         tresorParPers = 0
         for i in self.tapis.items():
             if i[1] > 0:
                 tresorParPers += i[1]
                 self.tapis[i[0]] = 0
-                
-        reste = tresorParPers%len(joueursSorties) 
-        tresorParPers -= reste
-        tresorParPers //= len(joueursSorties)
-        # Remet le reste sur le tapis sur la première carte de valeur qu'on trouve
-        for i in self.tapis.items():
-            if i[1] != -1:
-                self.tapis[i[0]] = reste
-                break
-        for k in joueursSorties:
-            self.joueurs[k] += tresorParPers
+        if len(joueursSorties) != 0:
+            reste = tresorParPers%len(joueursSorties) 
+            tresorParPers -= reste
+            tresorParPers //= len(joueursSorties)
+            # Remet le reste sur le tapis sur la première carte de valeur qu'on trouve
+            for i in self.tapis.items():
+                if i[1] != -1:
+                    self.tapis[i[0]] = reste
+                    break
+            for k in joueursSorties:
+                self.joueurs[k][0] += tresorParPers
             
         
     def jouer(self, choix: int, joueur: int) -> list:
@@ -175,9 +190,11 @@ class Diamant:
         assert self.joueursRestants == 0 or monstre == True
         if self.manchesRestants != 0:
             for i in range(1, len(self.joueurs)+1):
+                print("FIN MANCHE")
                 self.joueurs[i][2] == 0  # On remet tous les joueurs en jeu
                 self.joueursRestants = range(1, len(self.joueurs)+1)
-        else: 
+        else:
+            print("CLASSEMENT") 
             return self.classement()
 
     def classement(self) -> list:

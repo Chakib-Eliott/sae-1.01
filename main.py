@@ -19,7 +19,7 @@ except:
 print("BIENVENUE SUR DIAMANTS ! \nCe jeu est un jeu codé par Eliott et Chakib et est une représentation du jeu `INCAN GOLD`.")
 print()
 
-if len(sys.argv) >= 1:
+if len(sys.argv) > 1:
     if sys.argv[1].upper() == "GRAPHIQUE":
         from graphique import *
         print("L'interface graphique est lancé !")
