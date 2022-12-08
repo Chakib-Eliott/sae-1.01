@@ -21,7 +21,8 @@ while inputNombreJoueurs < 2 or inputNombreJoueurs > 8:
 
 def clear():
     # try: 
-    #     os.system('clear')
+    #     if os.name == 'nt': os.system('cls')
+    #     else: os.system('clear')
     # except:
     #     print()
     print('##############################')
@@ -40,7 +41,7 @@ def affichageCourant(instruction = ''):
 
     print()
     print('Contenu du tapis :')
-    for i in Jeu.tapis.items():
+    for i in Jeu.tapis:
         if i[1] <= 0:
             print(i[0])
         else:
@@ -50,7 +51,6 @@ def affichageCourant(instruction = ''):
 
 def pioche():
     return Jeu.piocheCarte()
-
 while Jeu.joueursRestants != 0:
     Jeu.piocheCarte()
     sortis = []

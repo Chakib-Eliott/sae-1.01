@@ -14,5 +14,6 @@ from diamants import Diamant
 # Jeu.manchesRestants = 0
 # Jeu.joueursRestants = 0
 # print(Jeu.jouer(1,1))
-
-help(Diamant)
+# help(Diamant)
+l = [1]
+print(l[-1])

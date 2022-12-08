@@ -36,8 +36,8 @@ class Diamant:
         self.typeJeu = typeJeu  # 0 joueurs | 1 IA (int)
         self.manchesRestants = 5  # nombre manches restantes (int)
         self.joueurs = {}  # caractéristique des joueurs (dict) - joueur : nb de diamants, nb de relique, en jeu ou non
-        self.tapis = {}  # tapis des cartes sorties (dict) - carte : nombre de diamants restants (-1 si monstre)
-        self.tapis2 = []
+        # self.tapis = {}  # tapis des cartes sorties (dict) - carte : nombre de diamants restants (-1 si monstre)
+        self.tapis = []
         self.creationJoueurs(nbJoueurs)  # appel de la fonction pour initialiser les caractéristiques (self.joueur)
     
     def creationJoueurs(self, nbJoueurs: int) -> None:
@@ -74,7 +74,7 @@ class Diamant:
         sortie = False
         monstresSorties = []
         monstre = None
-        for i in self.tapis2:
+        for i in self.tapis:
             if not type(i[0]) == int:
                 monstresSorties.append(i[0])
         print(monstresSorties)
@@ -99,10 +99,11 @@ class Diamant:
             tuple[int, int]: Trésor par personnes, trésor restant sur la carte.
         """
         tresorPerPers = self.cartes[-1] // self.joueursRestants  # Défini le nb de diamants par personne
+        self.tapis.append([self.cartes[-1], self.cartes[-1] % self.joueursRestants])   # Défini le reste des diamants et l'assigne à la carte sur le tapis
         self.tapis[-1][1] = self.cartes[-1] % self.joueursRestants  # Défini le reste des diamants et l'assigne à la carte sur le tapis
         for i in range(1,self.joueursRestants+1):
             self.joueurs[i][0] += tresorPerPers
-        return tresorPerPers, self.tapis[self.cartes[-1]]
+        return tresorPerPers, self.tapis[-1][1]
 
     def piocheCarte(self) -> str:
         """
@@ -117,12 +118,12 @@ class Diamant:
             self.repartitionTresor()
         else:
             print(self.cartes[-1])
-            self.tapis[self.cartes[-1]] = -1
+            self.tapis.append([self.cartes[-1], -1])
+            #self.tapis[self.cartes.index(self.cartes[-1])][1] = -1
             monstre = self.verificationMonstre()
             print(monstre)
             if monstre[0] == True:
                 print(monstre[1])
-                print(CARTES)
                 print(CARTES.index(monstre[1]))
                 i = CARTES.index(monstre[1])
                 CARTES.pop(i)
@@ -141,7 +142,7 @@ class Diamant:
             return
         # Calcule le nombre de diamants restants sur le tapis
         tresorParPers = 0
-        for i in self.tapis.items():
+        for i in self.tapis:
             if i[1] > 0:
                 tresorParPers += i[1]
                 self.tapis[i[0]] = 0
@@ -150,9 +151,9 @@ class Diamant:
             tresorParPers -= reste
             tresorParPers //= len(joueursSorties)
             # Remet le reste sur le tapis sur la première carte de valeur qu'on trouve
-            for i in self.tapis.items():
+            for i in self.tapis:
                 if i[1] != -1:
-                    self.tapis[i[0]] = reste
+                    self.tapis[i[0]][1] = reste
                     break
             for k in joueursSorties:
                 self.joueurs[k][0] += tresorParPers
