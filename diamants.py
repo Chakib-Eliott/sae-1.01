@@ -34,7 +34,7 @@ class Diamant:
         self.joueursRestants = nbJoueurs  # nombre de joueur restant dans la manche (int)
         self.cartes = list()  # paquet de carte (list)
         self.typeJeu = typeJeu  # 0 joueurs | 1 IA (int)
-        self.manchesRestants = 1  # nombre manches restantes (int)
+        self.manchesRestants = 5  # nombre manches restantes (int)
         self.joueurs = {}  # caractéristique des joueurs (dict) - joueur : nb de diamants permanants, nb de relique, en jeu ou non, nb diamants temporaires
         self.tapis = [] # tapis des cartes sorties (list) - [carte, nombre de diamants restants (-1 si monstre)]
         self.creationJoueurs(nbJoueurs)  # appel de la fonction pour initialiser les caractéristiques (self.joueur)
@@ -171,10 +171,12 @@ class Diamant:
         assert self.joueursRestants == 0 or monstre == True
         self.joueursRestants = 0
         if self.manchesRestants != 0:
-            print("#################FINMANCHE##################")
             return True
         
     def changementManche(self) -> None:
+        """
+        Change la manche et réinitialise la partie.
+        """
         for i in range(1, len(self.joueurs)+1):
             self.joueurs[i][2],self.joueurs[i][3] = 0,0  # Remet les joueurs en jeu, et supprime les coffres temporaires
             self.joueursRestants = self.nbJoueurs

@@ -14,10 +14,9 @@ print("INITIALISATION DE LA PARTIE ...")
 print()
 
 # Initialisation du nombre de joueurs (Entre 3 et 8 joueurs).
-inputNombreJoueurs = 3
+inputNombreJoueurs = 0
 while inputNombreJoueurs not in list(range(3,9)):  # Bloque le choix du joueur jusqu'à que le nombre rentré soit correct.
     try:
-        print("RAPPEL : Le jeu se joue de 3 à 8 joueurs.")
         inputNombreJoueurs = int(input("Choisir le nombre de joueurs (3 à 8) : "))
     except ValueError:
         print("Entrez un entier !")
@@ -33,7 +32,6 @@ def clear() -> None:
         else: os.system('clear')
     except:
         print()
-    # print('##############################')
 
 
 clear()
@@ -53,15 +51,14 @@ def affichageCourant(instruction = '') -> None:
     """
     print("INSTRUCTION :", instruction)
     print()
-    print("Manche :", 6-Jeu.manchesRestants)
+    print(f"Manche : {6-Jeu.manchesRestants}/5")
     print()
     print('Contenu du tapis :')
     for i in Jeu.tapis:
         if i[1] <= 0:  # Affichage juste du nom de monstre.
             print(i[0])
         else:  # Affichage de la carte trésor et de son reste de diamant.
-            print(i[0], ':', i[1])
-            
+            print(i[0], ':', i[1])  
     print("\n"*2)
 
 
@@ -88,42 +85,21 @@ while Jeu.manchesRestants > 0:
                     choix = str(input("rester, sortir\n >> "))
                 if choix == 'sortir' or choix == 's':
                     Jeu.jouer(i[0],1)
-                    time.sleep(0.1)
                     print()
                     print("Vous avez choisi de quitter ce tour !")
                     sortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
                 else:
                     # Aucune intéraction nécessaire, le jeu continue pour ces joueurs.
-                    time.sleep(0.1)
                     print()
                     print("Vous avez choisi de rester dans le jeu !")
-                time.sleep(0.1)
+                time.sleep(1)
         Jeu.sortie(sortis)  # Vérifie que la manche n'est pas fini et réparti le trésor aux joueurs sorties.
-        print(Jeu.tapis)
     else:
-        print("VOUS ETES MORT", Jeu.tapis[-1][0])
+        print("Un obstacle surgit ! Les joueurs restants dans la grotte fuit ! (L'obstacle était", Jeu.tapis[-1][0],")")
+        time.sleep(5)
         Jeu.changementManche()
 
 clear()
-print("Le classement est :")
+print("Fin de la partie.\nLe classement est :")
 for i in Jeu.classement():
     print('Joueur',i[0],'avec',i[1],'diamants')
-
-"""
-INSTRUCTION ex : Carte 15 sortie, chaque joueur recoit x diamants
-
-MANCHE : 1
-TAPIS : [25]  [3]  [Chauve-souris] 
-
-JOUEURS : [1,"Explore"] [2,"Sort"] [3,"Est sortie"]
-
-TOUR :
-
-NB DIAMANTS PERSO :
-
-RELIQUE(S) :
-
-CHOIX :
-
-"""
-
