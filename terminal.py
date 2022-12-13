@@ -130,7 +130,6 @@ while Jeu.manchesRestants > 0:
         time.sleep(5)
         Jeu.changementManche()
 
-
 clear()
 print("Fin de la partie.\nLe classement est :")
 for i in Jeu.classement():
