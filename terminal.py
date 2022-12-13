@@ -80,49 +80,50 @@ while Jeu.manchesRestants > 0:
         for i in Jeu.joueurs.items():
             clear()
             affichageCourant("Choix des joueurs...")
-            # Si le joueur n'est pas sortie et qu'on joue avec des bots sinon il vérifie que c'est nous.
-            if (i[1][2]==0 and choixJB==1) or i[0]==1:
-                print("Tour du joueur :", i[0])  # i[0] = joueur jouant
-                caras = Jeu.caracteristiquesJoueur(i[0])
-                print("Diamants en votre possession :", caras[3])  # Nombre de diamants pendant l'expédition
-                print("Relique(s) en votre possession :", caras[1])
-                print("Nombre de diamants dans votre coffre :", caras[0])  # Nombre de diamants dans le coffre
-                print('\n'*2)
-                print("Joueur", i[0], ": que souhaitez vous faire ?")
-                choix = str(input("rester, sortir\n >> ")) 
-                # Boucle sur le choix du joueur jusqu'à qu'il soit valide.
-                while choix != 'rester' and choix != 'sortir' and choix != 's' and choix != 'r':
-                    choix = str(input("rester, sortir\n >> "))
-                if choix == 'sortir' or choix == 's':
-                    Jeu.jouer(i[0],1)
-                    print()
-                    print("Vous avez choisi de quitter ce tour !")
-                    sortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
-                else:
-                    # Aucune intéraction nécessaire, le jeu continue pour ces joueurs.
-                    print()
-                    print("Vous avez choisi de rester dans le jeu !")
-                time.sleep(1)
-            elif choixJB == 0:
-                print("Tour du joueur :", i[0])  # i[0] = joueur jouant
-                caras1 = Jeu.caracteristiquesJoueur(i[0])
-                print("Diamants en sa possession :", caras1[3])  # Nombre de diamants pendant l'expédition
-                caras = Jeu.caracteristiquesJoueur(1)
-                print("Diamants en votre possession :", caras[3])  # Nombre de diamants pendant l'expédition
-                print("Relique(s) en votre possession :", caras[1])
-                print("Nombre de diamants dans votre coffre :", caras[0])  # Nombre de diamants dans le coffre
-                print('\n'*2)
-                choix = randint(0,1)  # Choisi entre sortir et rester de façon aléatoire.
-                if choix == 1:
-                    Jeu.jouer(i[0],1)
-                    print()
-                    print("Le joueur a décidé de quitter ce tour !")
-                    sortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
-                else:
-                    # Aucune intéraction nécessaire, le jeu continue pour ces joueurs.
-                    print()
-                    print("Le joueur a décidé de rester dans le jeu !")
-                time.sleep(2)
+            if i[1][2]==0:  # Vérifie si le joueur est toujours en jeu.
+                # Vérifie qu'on joue sans bot ou que c'est le joueur 1 soit nous.
+                if choixJB==1 or i[0]==1:
+                    print("Tour du joueur :", i[0])  # i[0] = joueur jouant
+                    caras = Jeu.caracteristiquesJoueur(i[0])
+                    print("Diamants en votre possession :", caras[3])  # Nombre de diamants pendant l'expédition
+                    print("Relique(s) en votre possession :", caras[1])
+                    print("Nombre de diamants dans votre coffre :", caras[0])  # Nombre de diamants dans le coffre
+                    print('\n'*2)
+                    print("Joueur", i[0], ": que souhaitez vous faire ?")
+                    choix = str(input("rester, sortir\n >> ")) 
+                    # Boucle sur le choix du joueur jusqu'à qu'il soit valide.
+                    while choix != 'rester' and choix != 'sortir' and choix != 's' and choix != 'r':
+                        choix = str(input("rester, sortir\n >> "))
+                    if choix == 'sortir' or choix == 's':
+                        Jeu.jouer(i[0],1)
+                        print()
+                        print("Vous avez choisi de quitter ce tour !")
+                        sortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
+                    else:
+                        # Aucune intéraction nécessaire, le jeu continue pour ces joueurs.
+                        print()
+                        print("Vous avez choisi de rester dans le jeu !")
+                    time.sleep(1)
+                elif choixJB == 0:  # Vérifie si il faut faire jouer les bots.
+                    print("Tour du joueur :", i[0])  # i[0] = joueur jouant
+                    caras1 = Jeu.caracteristiquesJoueur(i[0])
+                    print("Diamants en sa possession :", caras1[3])  # Nombre de diamants pendant l'expédition
+                    caras = Jeu.caracteristiquesJoueur(1)
+                    print("Diamants en votre possession :", caras[3])  # Nombre de diamants pendant l'expédition
+                    print("Relique(s) en votre possession :", caras[1])
+                    print("Nombre de diamants dans votre coffre :", caras[0])  # Nombre de diamants dans le coffre
+                    print('\n'*2)
+                    choix = randint(0,1)  # Choisi entre sortir et rester de façon aléatoire.
+                    if choix == 1:
+                        Jeu.jouer(i[0],1)
+                        print()
+                        print(f"Le joueur {i[0]} a décidé de quitter ce tour !")
+                        sortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
+                    else:
+                        # Aucune intéraction nécessaire, le jeu continue pour ces joueurs.
+                        print()
+                        print(f"Le joueur {i[0]} a décidé de rester dans le jeu !")
+                    time.sleep(1.5)
         Jeu.sortie(sortis)  # Vérifie que la manche n'est pas fini et réparti le trésor aux joueurs sorties.
     else:
         print("Un obstacle surgit ! Les joueurs restants dans la grotte fuit ! (L'obstacle était", Jeu.tapis[-1][0],")")

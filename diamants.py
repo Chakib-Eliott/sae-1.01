@@ -11,7 +11,8 @@ from random import sample  # Natif à Python
 CARTES = [
     1, 2, 3, 4, 5, 5, 7, 7, 9, 11, 11, 13, 14, 15, 17,
     'Araignée', 'Araignée', 'Araignée', 'Serpent', 'Serpent', 'Serpent',
-    'Larve', 'Larve', 'Larve', 'Boulet', 'Boulet', 'Boulet', 'Bélier', 'Bélier', 'Bélier'
+    'Larve', 'Larve', 'Larve', 'Boulet', 'Boulet', 'Boulet', 'Bélier', 'Bélier', 'Bélier',
+    'Relique','Relique','Relique','Relique','Relique'
     ]
 
 
@@ -69,11 +70,14 @@ class Diamant:
         if type(carte) == int:  # SI c'est une carte de diamants
             self.repartitionTresor(carte)  # On répartit le trésor
         else:  # Si c'est un monstre (ou une relique mais on verra plus tard)
-            self.tapis.append([carte, -1])  # On ajoute la carte au tapis
-            monstre = self.verificationMonstre()  # On vérifie si la dernière carte monstre est déjà sorti une fois
-            if monstre[0] == True:  # Si c'est le cas
-                CARTES.remove(monstre[1])  # On la retire du jeu jusqu'à la fin de la partie
-                return self.finManche(True)  # on appel la fin de la manche
+            if carte == 'Relique':
+                self.tapis.append([carte, -2])
+            else:
+                self.tapis.append([carte, -1])  # On ajoute la carte au tapis
+                monstre = self.verificationMonstre()  # On vérifie si la dernière carte monstre est déjà sorti une fois
+                if monstre[0] == True:  # Si c'est le cas
+                    CARTES.remove(monstre[1])  # On la retire du jeu jusqu'à la fin de la partie
+                    return self.finManche(True)  # on appel la fin de la manche
 
     def verificationMonstre(self) -> tuple:
         """
@@ -156,6 +160,13 @@ class Diamant:
                     break
             for k in joueursSorties:
                 self.joueurs[k][3] += tresorParPers  # On met le trésor dans le coffre des joueurs sorti
+        # Vérifie si il y a qu'un joueur qui sort et une relique sur le tapis.
+        if len(joueursSorties)==1 and ['Relique',-2] in self.tapis:
+            i = self.tapis.index(['Relique',-2])
+            y = CARTES.index('Relique')
+            CARTES.pop(y)  # Retire la relique du paquet de carte.
+            self.tapis.pop(i)  # Retire la relique du tapis.
+            self.joueurs[joueursSorties[0]][1] += 1  # Ajoute la relique au joueur.
             
     def finManche(self, monstre = False) -> bool:
         """
