@@ -13,8 +13,8 @@ Pendant les expéditions, les joueurs choisissent entre **rester** dans la grott
  - des cartes pièges
  - des cartes reliques
 
-Les cartes diamants comportent un trésor qui sera partagé entre tous les participants de l'expédition et le reste du trésor sera redéposé sur la carte. Le reste des diamants peut être récupéré si vous sortez de la grotte, le trésor est donc partagé avec tous les joueurs sortant.
-Les cartes pièges peuvent vous faire perdre tous vos diamants récoltés pendant votre expédition si un piège sort 2 fois.
+Les cartes diamants comportent un trésor qui sera partagé entre tous les participants de l'expédition et le reste du trésor sera redéposé sur la carte. Le reste des diamants peut être récupéré si vous sortez de la grotte, le trésor est donc partagé avec tous les joueurs sortant.<br>
+Les cartes pièges peuvent vous faire perdre tous vos diamants récoltés pendant votre expédition si un piège sort 2 fois.<br>
 Les reliques sont des cartes qui rapporte beaucoup de diamants à la fin de la partie mais pour la récupérer il faut être le seul joueur à sortir.
 
 ## Contenu du jeu
