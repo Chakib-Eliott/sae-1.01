@@ -13,6 +13,7 @@ WIDTH="600"
 HEIGHT="400"
 BACKGROUND = '#DBC797'
 root = Tk()
+root.title('Diamants by Eliott & Chakib')
 root.geometry(WIDTH+'x'+HEIGHT)  
 root.resizable(width=False, height=False)
 root.configure(bg=BACKGROUND)
