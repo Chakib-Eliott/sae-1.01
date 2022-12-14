@@ -85,6 +85,7 @@ while Jeu.manchesRestants > 0:
         sortis = []  # Liste des joueurs sorties
         for i in Jeu.joueurs.items():
             clear()
+            time.sleep(0.5)
             affichageCourant("Choix des joueurs...")
             if i[1][2]==0:  # Vérifie si le joueur est toujours en jeu.
                 # Vérifie qu'on joue sans bot ou que c'est le joueur 1 soit nous.
@@ -130,7 +131,7 @@ while Jeu.manchesRestants > 0:
                         # Aucune intéraction nécessaire, le jeu continue pour ces joueurs.
                         print()
                         print(f"{G}Le joueur {i[0]} a décidé de rester dans le jeu !{N}")
-                    time.sleep(1.5)
+                    time.sleep(3)
         Jeu.sortie(sortis)  # Vérifie que la manche n'est pas fini et réparti le trésor aux joueurs sorties.
     else:
         print(f"{R}Un obstacle surgit ! Les joueurs restants dans la grotte fuit ! (L'obstacle était {Jeu.tapis[-1][0]}){N}")

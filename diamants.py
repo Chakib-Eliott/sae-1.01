@@ -27,6 +27,7 @@ class Diamant:
         manchesRestants : entier défini à 5 par défaut qui indique le nombre de manches restantes
         joueurs : dictionnaire qui indique les caractéristiques des joueurs (nombre de diamants permanents, nombre de reliques, en jeu ou non, nombre de diamants)
         tapis : dictionnaire qui montre le tapis de cartes ainsi que les diamants restants dessus (-1 = monstre)
+        relique : liste des joueurs ayant obtenu des reliques
     """
 
     def __init__(self, nbJoueurs: int, typeJeu: bool) -> None:
@@ -38,6 +39,7 @@ class Diamant:
         self.manchesRestants = 5  # nombre manches restantes (int)
         self.joueurs = {}  # caractéristique des joueurs (dict) - joueur : nb de diamants permanants, nb de relique, en jeu ou non, nb diamants temporaires
         self.tapis = [] # tapis des cartes sorties (list) - [carte, nombre de diamants restants (-1 si monstre)]
+        self.relique = []  # des joueurs ayant des reliques (list)
         self.creationJoueurs(nbJoueurs)  # appel de la fonction pour initialiser les caractéristiques (self.joueur)
     
     def melangeCarte(self) -> None:
@@ -167,6 +169,7 @@ class Diamant:
             CARTES.pop(y)  # Retire la relique du paquet de carte.
             self.tapis.pop(i)  # Retire la relique du tapis.
             self.joueurs[joueursSorties[0]][1] += 1  # Ajoute la relique au joueur.
+            self.relique.append(joueursSorties[0])  # Ajoute le joueur à la liste des reliques
             
     def finManche(self, monstre = False) -> bool:
         """
@@ -201,6 +204,12 @@ class Diamant:
         Returns:
             list: Classement des joueurs
         """
+        # Vérifie les reliques et donne les récompenses par rapport à quand ils les ont obtenu.
+        for k in range(len(self.relique)):
+            if k <= 3:
+                self.joueurs[self.relique[k]][0] += 5
+            else:
+                self.joueurs[self.relique[k]][0] += 10
         classement = [[1,self.joueurs[1][0]]]
         for i in range(2,len(self.joueurs)+1):
             fin = False
