@@ -2,10 +2,12 @@
 VERSION GRAPHIQUE
 
 AUTEURS : Eliott & Chakib
+
+Ce jeu est développé dans le cadre d'une SAé (un projet) avec l'IUT de Vélizy.
 """
-import diamants # Les fonction qui permettent de faire fonctionner le jeu
-from tkinter import *
-import tkinter.font as TkFont
+import diamants as D  # Les fonction qui permettent de faire fonctionner le jeu
+from tkinter import *  # Natif à Python
+import tkinter.font as TkFont  # Natif à Python
 
 WIDTH="1000"
 HEIGHT="700"
@@ -15,13 +17,16 @@ root.title('Diamants by Eliott & Chakib')
 root.geometry(f"{WIDTH}x{HEIGHT}")
 root.resizable(width=False, height=False)
 DIAMANTIMAGE = PhotoImage(file='./asset/diamants_logo.png')
+
 root.iconphoto(False, DIAMANTIMAGE)
 root.configure(bg=BACKGROUND)
 
-
+RESTERIMAGE = PhotoImage(file='./asset/diamant_rester.png')
+SORTIRIMAGE = PhotoImage(file='./asset/diamant_sortir.png')
 
 
 def accueil():
+    Vider()
     def plusplayer():
         value = nbPlayers.get()
         if int(value) < 8:
@@ -73,8 +78,67 @@ def Vider():
         widget.destroy()
 
 accueil()
+Vider()
+
+Jeu = D.Diamant(8, 0) # Création de la partie
+Jeu.melangeCarte()
 
 
 
+# En jeu
+# Manche actuelle
+manche_text = TkFont.Font(size=30)
+manche = Label(root, text='Manche : '+str(6-Jeu.manchesRestants), bg=BACKGROUND, font=manche_text)
+manche.place(x=375, y=25)
+
+# Bouton quitter
+quitter_text = TkFont.Font(size=18)
+quitter = Button(root, text ="X", font=quitter_text, activebackground='red', command=accueil)
+quitter.place(x=950, y=650)
+
+# Statistiques du joueurs jouants
+stats = Label(root, text='Statistiques', bg=BACKGROUND, font=TkFont.Font(size=18, underline=True))
+stats.place(x=100, y=550)
+
+diamants = Label(root, text='Diamants : '+str(Jeu.joueurs[1][3]), bg=BACKGROUND, font=TkFont.Font(size=10))
+diamants.place(x=50, y=600)
+
+reliques = Label(root, text='Reliques : '+str(Jeu.joueurs[1][1]), bg=BACKGROUND, font=TkFont.Font(size=10))
+reliques.place(x=50, y=630)
+
+coffre = Label(root, text='Coffre : '+str(Jeu.joueurs[1][0]), bg=BACKGROUND, font=TkFont.Font(size=10))
+coffre.place(x=50, y=660)
+
+# Affichage des joueurs ainsi que leurs caractéristiques
+joueurcarte = [['affjoueur', 'affstatut', 'affdiamant', 'affrelique'] for i in range(Jeu.nbJoueurs)]
+for i in range(len(joueurcarte)):
+    joueurcarte[i][0] = Label(root, text='Joueur '+str(i+1)+': ', bg=BACKGROUND)
+    joueurcarte[i][0].place(x=850,y=80+i*70)
+
+    joueurcarte[i][1] = Label(root, text='Explore', bg=BACKGROUND, fg='#58bf4e')
+    joueurcarte[i][1].place(x=910,y=80+i*70)
+
+    joueurcarte[i][2] = Label(root, text='Diamants : '+str(Jeu.joueurs[i+1][3]), bg=BACKGROUND)
+    joueurcarte[i][2].place(x=850,y=100+i*70)
+
+    joueurcarte[i][3] = Label(root, text='Reliques : '+str(Jeu.joueurs[i+1][1]), bg=BACKGROUND)
+    joueurcarte[i][3].place(x=850,y=120+i*70)
+
+
+rester = Button(image=RESTERIMAGE, text='Rester', compound=TOP, activebackground='#a9f099')
+rester.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
+rester.place(x=320, y=450)
+
+sortir = Button(image=SORTIRIMAGE, text='Sortir', compound=TOP, activebackground='#f09999')
+sortir.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
+sortir.place(x=520, y=450)
 
 root.mainloop()
+
+
+
+# Max 25 cartes
+# Pioche de cartes (récupérer cartes offi)
+# Fond officiel du plateau
+# Jeu fonctionnel enft 
+# sleep entre les tours pour rendre + cohérent 

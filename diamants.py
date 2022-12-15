@@ -11,7 +11,7 @@ from random import sample  # Natif à Python
 CARTES = [
     1, 2, 3, 4, 5, 5, 7, 7, 9, 11, 11, 13, 14, 15, 17,
     'Araignée', 'Araignée', 'Araignée', 'Serpent', 'Serpent', 'Serpent',
-    'Larve', 'Larve', 'Larve', 'Boulet', 'Boulet', 'Boulet', 'Bélier', 'Bélier', 'Bélier',
+    'Lave', 'Lave', 'Lave', 'Boulet', 'Boulet', 'Boulet', 'Bélier', 'Bélier', 'Bélier',
     'Relique','Relique','Relique','Relique','Relique'
     ]
 
