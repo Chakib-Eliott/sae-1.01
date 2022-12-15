@@ -25,6 +25,16 @@ RESTERIMAGE = PhotoImage(file='./asset/diamant_rester.png')
 SORTIRIMAGE = PhotoImage(file='./asset/diamant_sortir.png')
 
 
+BOULETCARTE = PhotoImage(file='./asset/cartes/diamant-ball.png')
+BELIERCARTE = PhotoImage(file='./asset/cartes/diamant-belier.png')
+LAVECARTE = PhotoImage(file='./asset/cartes/diamant-lava.png')
+RELIQUECARTE = PhotoImage(file='./asset/cartes/diamant-relique.png')
+DIAMANTCARTE1 = PhotoImage(file='./asset/cartes/diamant-rubis-1.png')
+DIAMANTCARTE2 = PhotoImage(file='./asset/cartes/diamant-rubis-2.png')
+SERPANTCARTE = PhotoImage(file='./asset/cartes/diamant-snake.png')
+ARAIGNEESCARTE = PhotoImage(file='./asset/cartes/diamant-spiders.png')
+
+
 def accueil():
     Vider()
     def plusplayer():
@@ -70,8 +80,16 @@ def accueil():
     jouer = Button(root, text ="JOUER!", font=jouer_text, activebackground='#89e37f', command=Vider)
     jouer.place(x=440, y= 300)
 
+### EN CONSTRUCTION
 def Jouer():
-    pass
+    print(len(Jeu.tapis))
+    carte = Label(image=BOULETCARTE)
+    carte.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
+    if len(Jeu.tapis) < 7:
+        carte.place(x=10+100*len(Jeu.tapis), y=100)
+    elif len(Jeu.tapis) < 14:
+        carte.place(x=10+100*(len(Jeu.tapis)-7), y=200)
+    Jeu.piocheCarte()
 
 def Vider():
     for widget in root.winfo_children():
@@ -129,7 +147,7 @@ rester = Button(image=RESTERIMAGE, text='Rester', compound=TOP, activebackground
 rester.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
 rester.place(x=320, y=450)
 
-sortir = Button(image=SORTIRIMAGE, text='Sortir', compound=TOP, activebackground='#f09999')
+sortir = Button(image=SORTIRIMAGE, text='Sortir', compound=TOP, activebackground='#f09999', command=Jouer)
 sortir.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
 sortir.place(x=520, y=450)
 
