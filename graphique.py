@@ -175,7 +175,16 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
     joueurcarte[joueurencours][1]["text"]=STATUT[Jeu.joueurs[joueurencours][2]][0]
     joueurcarte[joueurencours][1]["fg"]=STATUT[Jeu.joueurs[joueurencours][2]][1]
             
-            
+    if choix == 1:
+        Jeu.joueurssortis.append(joueurencours)
+        listejoueursenjeu = []
+        for k,v in Jeu.joueurs.items():
+            if v[2] == 0:
+                listejoueursenjeu.append(k)
+        if len(listejoueursenjeu) == 0 and choix==1:
+            Jeu.changementManche()
+            joueurencours = 1
+            return inigame()
     
     # CHAGEMENT DE JOUEUR
     joueurencours = prochainJoueur(joueurencours)
@@ -185,15 +194,7 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
     coffre['text'] = 'Coffre :'+str(Jeu.joueurs[joueurencours][0])
     reliques['text'] = 'Reliques :'+str(Jeu.joueurs[joueurencours][1])
 
-    if choix == 1:
-        Jeu.joueurssortis.append(joueurencours)
-        listejoueursenjeu = []
-        for k,v in Jeu.joueurs.items():
-            if v[2] == 0:
-                listejoueursenjeu.append(k)
-        if len(listejoueursenjeu) == 1 and choix==1:
-            Jeu.changementManche()
-            return inigame()
+    
             
 def lancementpartieintermediaire():
     global Jeu
@@ -209,6 +210,7 @@ def inigame():
     global reliques
     global coffre
     Jeu.joueurssortis = []
+
 
     # En jeu
     # Manche actuelle
