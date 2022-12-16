@@ -1,8 +1,19 @@
 # Diamants
 
 **Auteurs :** Eliott, Chakib  
-**Années :** 2022-2023
+**Années :** 2022-2023   
 **GitHub :** [https://github.com/Chakib-Eliott/sae-1.01](https://github.com/Chakib-Eliott/sae-1.01)
+
+## Sommaire
+
+1. [Description](#description)   
+2. [Règle du jeu](#règle-du-jeu)   
+3. [Contenu du jeu](#contenu-du-jeu)   
+4. [Fonctionnement](#fonctionnement)   
+5. [Bugs rencontrés](#bugs-rencontrés)   
+6. [Idées](#idées)   
+7. [Illustration des cartes](#illustration-des-cartes)    
+8. [Captures d'écran](#captures-décran)
 
 ## Description
 
@@ -50,7 +61,16 @@ Les arguments possibles :
 Lors de la réalisation du projet, nous avons fait face à plusieurs bugs.<br>
 Le premier bug était un bug sur les **vérifications des monstres**. En effet nous vérifions si un monstre sortait et on retournait `True` si il était déjà sorti. Mais nous analysons jamais ce booléen et donc cela ne stoppait jamais la partie. Nous avons donc analysé ce booléen dans la fonction `piocheCarte`<br>
 Le deuxième bug était un **problème de type**. Nous avions utilisé un dictionnaire pour représenter le tapis mais le dictionnaire n'était pas le type le plus adapté à ce problème vu que les cartes ne pouvaient donc pas sortir deux fois et on avait donc un problème de tour 'vide'. Nous avons donc remplacé la type du tapis par une liste à 2 dimensions.<br>
-Le troisième bug était qu'on **n'attribuait jamais les bonus de la relique**. Ce bug a rapidement été réglé après le rajout du bonus.
+Le troisième bug était qu'on **n'attribuait jamais les bonus de la relique**. Ce bug a rapidement été réglé après le rajout du bonus.<br>
+Le quatrième bug était qu'on ne pouvait pas utiliser les 'print format' de la manière suivante avec les machines de l'IUT :
+```python
+text = "Hello World!"
+print(f"{text}")
+```
+Nous avons donc modifié nos 'print' afin de les rendre utilisable avec la méthode suivante :
+```python
+print("Hello {w}!".format(w="World"))
+```
 
 ## Idées
 
@@ -59,13 +79,27 @@ Nous avons aussi **ajouté des couleurs à ce terminal** pour le rendre plus lis
 Au lancement du jeu vous **choisissez directement la version du jeu**, soit dans le terminal soit avec l'interface graphique, et vous pouvez même rentrer ce choix avec des **arguments** après la commande Python.<br>
 Pour mieux implémenter le jeu dans le terminal et l'interface graphique, nous avons décidé de construire le module `diamants.py` avec une classe (**Class**).
 
+## Illustration des cartes
+
+Voici à quoi ressemble les cartes en jeu :
+| Nom de la carte |                  Illustration                  |
+| :-------------: | :--------------------------------------------: |
+|   Diamants 1    | ![diamants1](asset/cartes/diamant-rubis-1.png) |
+|   Diamants 2    | ![diamants2](asset/cartes/diamant-rubis-2.png) |
+|    Reliques     |  ![relique](asset/cartes/diamant-relique.png)  |
+|    Araignées    | ![araignees](asset/cartes/diamant-spiders.png) |
+|    Serpents     |  ![serpents](asset/cartes/diamant-snake.png)   |
+|     Boulets     |   ![boulets](asset/cartes/diamant-ball.png)    |
+|     Béliers     |  ![beliers](asset/cartes/diamant-belier.png)   |
+|      Laves      |    ![laves](asset/cartes/diamant-lava.png)     |
+
 ## Captures d'écran
 
 *à ajouter*
 
 <br>
 
-[*Lien vers le sujet.*](https://ecampus.paris-saclay.fr/pluginfile.php/1965841/mod_resource/content/0/sae01_diamants.pdf)
+[*Lien vers le sujet.*](http://eliott-b.tech/sae_1_01/sae01_diamants.pdf)
 
 <br>
 &copy; Eliott / Chakib

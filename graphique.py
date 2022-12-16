@@ -1,14 +1,18 @@
 """
-VERSION GRAPHIQUE
+VERSION GRAPHIQUE (attention aux yeux)
 
 AUTEURS : Eliott & Chakib
 
 Ce jeu est développé dans le cadre d'une SAé (un projet) avec l'IUT de Vélizy.
 """
+
 import diamants as D  # Les fonction qui permettent de faire fonctionner le jeu
 from tkinter import *  # Natif à Python
 import tkinter.font as TkFont  # Natif à Python
+from random import choice  # Natif à Python
 
+
+# Initialisation de la fenêtre de jeu.
 WIDTH="1000"
 HEIGHT="700"
 BACKGROUND = '#DBC797'
@@ -21,33 +25,60 @@ DIAMANTIMAGE = PhotoImage(file='./asset/diamants_logo.png')
 root.iconphoto(False, DIAMANTIMAGE)
 root.configure(bg=BACKGROUND)
 
+# Initialisation des images des cartes 'sortir' et 'rester'.
 RESTERIMAGE = PhotoImage(file='./asset/diamant_rester.png')
 SORTIRIMAGE = PhotoImage(file='./asset/diamant_sortir.png')
 
-
+# Initialisation des images des cartes.
 BOULETCARTE = PhotoImage(file='./asset/cartes/diamant-ball.png')
 BELIERCARTE = PhotoImage(file='./asset/cartes/diamant-belier.png')
 LAVECARTE = PhotoImage(file='./asset/cartes/diamant-lava.png')
 RELIQUECARTE = PhotoImage(file='./asset/cartes/diamant-relique.png')
 DIAMANTCARTE1 = PhotoImage(file='./asset/cartes/diamant-rubis-1.png')
 DIAMANTCARTE2 = PhotoImage(file='./asset/cartes/diamant-rubis-2.png')
-SERPANTCARTE = PhotoImage(file='./asset/cartes/diamant-snake.png')
+SERPENTCARTE = PhotoImage(file='./asset/cartes/diamant-snake.png')
 ARAIGNEESCARTE = PhotoImage(file='./asset/cartes/diamant-spiders.png')
 
+CARTE_SPECIAL = {
+    'Relique':RELIQUECARTE, 'Boulet':BOULETCARTE, 'Bélier':BELIERCARTE,
+    'Lave':LAVECARTE, 'Serpent':SERPENTCARTE, 'Araignée':ARAIGNEESCARTE
+}
 
-def accueil():
+CARTE_DIAMANT = [DIAMANTCARTE1,DIAMANTCARTE2]
+
+STATUT = {0:["Explore", '#58bf4e'], 1:["Sorti", '#d94636']}
+
+NOMBREJOUEURS = 3
+
+def getPlayer() -> int:
+    """
+    Permet d'obtenir le nombre de joueurs.
+
+    Returns :
+        int: Nombre de joueurs
+    """
+    print(NOMBREJOUEURS)
+    return NOMBREJOUEURS
+
+def accueil() -> None:
     Vider()
-    def plusplayer():
+
+    def plusplayer() -> None:
+        global NOMBREJOUEURS
         value = nbPlayers.get()
         if int(value) < 8:
             nbPlayers.delete(0,END)
             nbPlayers.insert(0,str(int(value)+1))
+            NOMBREJOUEURS = nbPlayers.get()
 
-    def minusplayer():
+    def minusplayer() -> None:
+        global NOMBREJOUEURS
         value = nbPlayers.get()
         if int(value) > 3:
             nbPlayers.delete(0,END)
             nbPlayers.insert(0,str(int(value)-1))
+            NOMBREJOUEURS = nbPlayers.get()
+            
     # Logo diamants
     diamant = Label(image=DIAMANTIMAGE)
     diamant.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
@@ -77,82 +108,177 @@ def accueil():
     augmenter.place(x=200, y= 300)
 
     jouer_text = TkFont.Font(size=18)
-    jouer = Button(root, text ="JOUER!", font=jouer_text, activebackground='#89e37f', command=Vider)
+    jouer = Button(root, text ="JOUER!", font=jouer_text, activebackground='#89e37f', command=lancementpartieintermediaire)
     jouer.place(x=440, y= 300)
 
-### EN CONSTRUCTION
-def Jouer():
-    print(len(Jeu.tapis))
-    carte = Label(image=BOULETCARTE)
+
+def Vider() -> None:
+    """
+    Supprime tous les éléments de l'écran.
+    Examples : Les titres, les boutons, ...
+    """
+    for widget in root.winfo_children():
+        widget.destroy()
+
+joueurencours = 1
+
+def prochainJoueur(joueuractuel: int) -> int:
+    prochain = (joueuractuel)%(Jeu.nbJoueurs)+1
+    if Jeu.joueurs[prochain][2] == 0:
+        return prochain
+    else:
+        return prochainJoueur(prochain)
+
+def finTour(joueuractuel: int) -> bool:
+    listejoueursenjeu = []
+    for k,v in Jeu.joueurs.items():
+        if v[2] == 0:
+            listejoueursenjeu.append(k)
+    if joueuractuel == listejoueursenjeu[-1]:
+        return True
+    return False
+
+def Jouer(choix: int): # Quand le joueur en cours à cliquer
+    # 0 = rester
+    # 1 = sortir
+    global Jeu
+    global joueurcarte
+    global joueurencours
+    print(Jeu.tapis)
+    # Vérifie si c'est la fin du tour
+    if finTour(joueurencours):
+        # METTRE CARTE SUR TAPIS
+        carte_tapis = Jeu.cartes[-1]
+        if type(carte_tapis) == int:
+            carte = Label(image=choice(CARTE_DIAMANT))
+        else:
+            carte = Label(image=CARTE_SPECIAL[carte_tapis])
+        carte.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
+        if len(Jeu.tapis) < 7:
+            carte.place(x=10+100*len(Jeu.tapis), y=100)
+        elif len(Jeu.tapis) < 14:
+            carte.place(x=10+100*(len(Jeu.tapis)-7), y=200)
+        # Vérifie que la carte n'est pas un piège
+        if not(Jeu.piocheCarte()): 
+            # APPLIQUE CARTE (donc vérifier joueurs sortis etc.)
+            Jeu.sortie(Jeu.joueurssortis)
+            # DIAMANT/RELIQUE
+        else:
+            # MONSTRE (donc fin manche)
+            pass
+ 
+
+
+
+    # APPLIQUER LE CHOIX DU JOUEUR
+    Jeu.jouer(joueurencours, choix)
+    joueurcarte[joueurencours][1]["text"]=STATUT[Jeu.joueurs[joueurencours][2]][0]
+    joueurcarte[joueurencours][1]["fg"]=STATUT[Jeu.joueurs[joueurencours][2]][1]
+            
+            
+    
+    # CHAGEMENT DE JOUEUR
+    joueurencours = prochainJoueur(joueurencours)
+    joueurcarte[joueurencours][1]["text"]='Joue...'
+    joueurcarte[joueurencours][1]["fg"]='#de96ff'
+    diamants['text'] = 'Diamants :'+str(Jeu.joueurs[joueurencours][3])
+    coffre['text'] = 'Coffre :'+str(Jeu.joueurs[joueurencours][0])
+    reliques['text'] = 'Reliques :'+str(Jeu.joueurs[joueurencours][1])
+
+    if choix == 1:
+        Jeu.joueurssortis.append(joueurencours)
+        listejoueursenjeu = []
+        for k,v in Jeu.joueurs.items():
+            if v[2] == 0:
+                listejoueursenjeu.append(k)
+        if len(listejoueursenjeu) == 1 and choix==1:
+            Jeu.changementManche()
+            return inigame()
+            
+def lancementpartieintermediaire():
+    global Jeu
+    Jeu = D.Diamant(int(getPlayer()), 0) # Création de la partie
+    Jeu.melangeCarte()
+    inigame()
+
+def inigame():
+    Vider()
+    global Jeu
+    global joueurcarte
+    global diamants
+    global reliques
+    global coffre
+    Jeu.joueurssortis = []
+
+    # En jeu
+    # Manche actuelle
+    manche_text = TkFont.Font(size=30)
+    manche = Label(root, text='Manche : '+str(6-Jeu.manchesRestants), bg=BACKGROUND, font=manche_text)
+    manche.place(x=375, y=25)
+
+    # Bouton quitter
+    quitter_text = TkFont.Font(size=18)
+    quitter = Button(root, text ="X", font=quitter_text, activebackground='red', command=accueil)
+    quitter.place(x=950, y=650)
+
+    # Statistiques du joueurs jouants
+    stats = Label(root, text='Statistiques', bg=BACKGROUND, font=TkFont.Font(size=18, underline=True))
+    stats.place(x=100, y=550)
+
+    diamants = Label(root, text='Diamants : '+str(Jeu.joueurs[1][3]), bg=BACKGROUND, font=TkFont.Font(size=10))
+    diamants.place(x=50, y=600)
+
+    reliques = Label(root, text='Reliques : '+str(Jeu.joueurs[1][1]), bg=BACKGROUND, font=TkFont.Font(size=10))
+    reliques.place(x=50, y=630)
+
+    coffre = Label(root, text='Coffre : '+str(Jeu.joueurs[1][0]), bg=BACKGROUND, font=TkFont.Font(size=10))
+    coffre.place(x=50, y=660)
+
+    # Affichage des joueurs ainsi que leurs caractéristiques
+    joueurcarte = [['affjoueur', 'affstatut', 'affdiamant', 'affrelique'] for i in range(1,Jeu.nbJoueurs+1)]
+    joueurcarte.insert(0, 'test') # A CORRIGER
+    for i in range(1,len(joueurcarte)):
+        joueurcarte[i][0] = Label(root, text='Joueur '+str(i)+': ', bg=BACKGROUND)
+        joueurcarte[i][0].place(x=850,y=80+i*70)
+
+        joueurcarte[i][1] = Label(root, text='Explore', bg=BACKGROUND, fg='#58bf4e')
+        joueurcarte[i][1].place(x=910,y=80+i*70)
+
+        joueurcarte[i][2] = Label(root, text='Diamants : '+str(Jeu.joueurs[i][3]), bg=BACKGROUND)
+        joueurcarte[i][2].place(x=850,y=100+i*70)
+
+        joueurcarte[i][3] = Label(root, text='Reliques : '+str(Jeu.joueurs[i][1]), bg=BACKGROUND)
+        joueurcarte[i][3].place(x=850,y=120+i*70)
+
+
+    rester = Button(image=RESTERIMAGE, text='Rester', compound=TOP, activebackground='#a9f099', command=lambda:Jouer(0))
+    rester.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
+    rester.place(x=320, y=450)
+
+    sortir = Button(image=SORTIRIMAGE, text='Sortir', compound=TOP, activebackground='#f09999', command=lambda:Jouer(1))
+    sortir.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
+    sortir.place(x=520, y=450)
+
+    joueurcarte[1][1]["text"]='Joue...'
+    joueurcarte[1][1]["fg"]='#de96ff'
+
+###################
+
+    carte_tapis = Jeu.cartes[-1]
+    if type(carte_tapis) == int:
+        carte = Label(image=choice(CARTE_DIAMANT))
+    else:
+        carte = Label(image=CARTE_SPECIAL[carte_tapis])
     carte.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
     if len(Jeu.tapis) < 7:
         carte.place(x=10+100*len(Jeu.tapis), y=100)
     elif len(Jeu.tapis) < 14:
         carte.place(x=10+100*(len(Jeu.tapis)-7), y=200)
-    Jeu.piocheCarte()
-
-def Vider():
-    for widget in root.winfo_children():
-        widget.destroy()
-
+    Jeu.piocheCarte()    
 accueil()
-Vider()
 
-Jeu = D.Diamant(8, 0) # Création de la partie
-Jeu.melangeCarte()
-
-
-
-# En jeu
-# Manche actuelle
-manche_text = TkFont.Font(size=30)
-manche = Label(root, text='Manche : '+str(6-Jeu.manchesRestants), bg=BACKGROUND, font=manche_text)
-manche.place(x=375, y=25)
-
-# Bouton quitter
-quitter_text = TkFont.Font(size=18)
-quitter = Button(root, text ="X", font=quitter_text, activebackground='red', command=accueil)
-quitter.place(x=950, y=650)
-
-# Statistiques du joueurs jouants
-stats = Label(root, text='Statistiques', bg=BACKGROUND, font=TkFont.Font(size=18, underline=True))
-stats.place(x=100, y=550)
-
-diamants = Label(root, text='Diamants : '+str(Jeu.joueurs[1][3]), bg=BACKGROUND, font=TkFont.Font(size=10))
-diamants.place(x=50, y=600)
-
-reliques = Label(root, text='Reliques : '+str(Jeu.joueurs[1][1]), bg=BACKGROUND, font=TkFont.Font(size=10))
-reliques.place(x=50, y=630)
-
-coffre = Label(root, text='Coffre : '+str(Jeu.joueurs[1][0]), bg=BACKGROUND, font=TkFont.Font(size=10))
-coffre.place(x=50, y=660)
-
-# Affichage des joueurs ainsi que leurs caractéristiques
-joueurcarte = [['affjoueur', 'affstatut', 'affdiamant', 'affrelique'] for i in range(Jeu.nbJoueurs)]
-for i in range(len(joueurcarte)):
-    joueurcarte[i][0] = Label(root, text='Joueur '+str(i+1)+': ', bg=BACKGROUND)
-    joueurcarte[i][0].place(x=850,y=80+i*70)
-
-    joueurcarte[i][1] = Label(root, text='Explore', bg=BACKGROUND, fg='#58bf4e')
-    joueurcarte[i][1].place(x=910,y=80+i*70)
-
-    joueurcarte[i][2] = Label(root, text='Diamants : '+str(Jeu.joueurs[i+1][3]), bg=BACKGROUND)
-    joueurcarte[i][2].place(x=850,y=100+i*70)
-
-    joueurcarte[i][3] = Label(root, text='Reliques : '+str(Jeu.joueurs[i+1][1]), bg=BACKGROUND)
-    joueurcarte[i][3].place(x=850,y=120+i*70)
-
-
-rester = Button(image=RESTERIMAGE, text='Rester', compound=TOP, activebackground='#a9f099')
-rester.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
-rester.place(x=320, y=450)
-
-sortir = Button(image=SORTIRIMAGE, text='Sortir', compound=TOP, activebackground='#f09999', command=Jouer)
-sortir.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
-sortir.place(x=520, y=450)
 
 root.mainloop()
-
 
 
 # Max 25 cartes

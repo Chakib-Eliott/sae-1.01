@@ -17,14 +17,14 @@ Y = '\033[93m'  # jaune
 R = '\033[91m'  # rouge
 N = '\033[0m'  # gris, couleur normale
 
-print(f"{R}INITIALISATION DE LA PARTIE ...")
+print("{r}INITIALISATION DE LA PARTIE ...".format(r=R))
 print()
 
 # Initialisation du nombre de joueurs (Entre 3 et 8 joueurs).
 inputNombreJoueurs = 0
 while inputNombreJoueurs not in list(range(3,9)):  # Bloque le choix du joueur jusqu'à que le nombre rentré soit correct.
     try:
-        inputNombreJoueurs = int(input(f"{G}Choisir le nombre de joueurs (3 à 8) : "))
+        inputNombreJoueurs = int(input("{g}Choisir le nombre de joueurs (3 à 8) : ".format(g=G)))
     except ValueError:
         print("Entrez un entier !")
 
@@ -50,7 +50,7 @@ def clear() -> None:
 
 
 clear()
-print(f"{R}BON JEU !{N}")
+print("{r}BON JEU !{n}".format(r=R,n=N))
 time.sleep(1)
 
 Jeu = D.Diamant(inputNombreJoueurs, 0) # Création de la partie
@@ -64,17 +64,17 @@ def affichageCourant(instruction = '') -> None:
     Args:
         instruction (str): Instruction du jeu.
     """
-    print(f"{R}INSTRUCTION : {Y}{instruction}")
+    print("{r}INSTRUCTION : {y}{i}".format(r=R,y=Y,i=instruction))
     print()
-    print(f"{R}Manche : {Y}{6-Jeu.manchesRestants}/5")
+    print("{r}Manche : {y}{m}/5".format(r=R,y=Y,m=6-Jeu.manchesRestants))
     print()
-    print(f'{R}Contenu du tapis :{Y}')
+    print('{r}Contenu du tapis :{y}'.format(r=R,y=Y))
     for i in Jeu.tapis:
         if i[1] <= 0:  # Affichage juste du nom de monstre.
             print(i[0])
         else:  # Affichage de la carte trésor et de son reste de diamant.
             print(i[0], ':', i[1])  
-    print(f"{N}\n"*2)
+    print(N,"\n"*2)
 
 
 # Boucle du jeu.
@@ -90,13 +90,13 @@ while Jeu.manchesRestants > 0:
             if i[1][2]==0:  # Vérifie si le joueur est toujours en jeu.
                 # Vérifie qu'on joue sans bot ou que c'est le joueur 1 soit nous.
                 if choixJB==1 or i[0]==1:
-                    print(f"{R}Tour du joueur :{Y} {i[0]}")  # i[0] = joueur jouant
+                    print("{r}Tour du joueur :{y} {i}".format(r=R,y=Y,i=i[0]))  # i[0] = joueur jouant
                     caras = Jeu.caracteristiquesJoueur(i[0])
-                    print(f"{R}Diamants en votre possession :{Y} {caras[3]}")  # Nombre de diamants pendant l'expédition
-                    print(f"{R}Relique(s) en votre possession :{Y} {caras[1]}")
-                    print(f"{R}Nombre de diamants dans votre coffre :{Y} {caras[0]}")  # Nombre de diamants dans le coffre
+                    print("{r}Diamants en votre possession :{y} {c}".format(r=R,y=Y,c=caras[3]))  # Nombre de diamants pendant l'expédition
+                    print("{r}Relique(s) en votre possession :{y} {c}".format(r=R,y=Y,c=caras[1]))
+                    print("{r}Nombre de diamants dans votre coffre :{y} {c}".format(r=R,y=Y,c=caras[0]))  # Nombre de diamants dans le coffre
                     print('\n'*2)
-                    print(f"{R}Joueur {i[0]} :{Y} que souhaitez vous faire ?{N}")
+                    print("{r}Joueur {i} :{y} que souhaitez vous faire ?{n}".format(r=R,i=i[0],y=Y,n=N))
                     choix = str(input("rester, sortir\n >> ")) 
                     # Boucle sur le choix du joueur jusqu'à qu'il soit valide.
                     while choix != 'rester' and choix != 'sortir' and choix != 's' and choix != 'r':
@@ -104,41 +104,42 @@ while Jeu.manchesRestants > 0:
                     if choix == 'sortir' or choix == 's':
                         Jeu.jouer(i[0],1)
                         print()
-                        print(f"{G}Vous avez choisi de quitter ce tour !{N}")
+                        print("{g}Vous avez choisi de quitter ce tour !{n}".format(g=G,n=N))
                         sortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
                     else:
                         # Aucune intéraction nécessaire, le jeu continue pour ces joueurs.
                         print()
-                        print(f"{G}Vous avez choisi de rester dans le jeu !{N}")
+                        print("{g}Vous avez choisi de rester dans le jeu !{n}".format(g=G,n=N))
                     time.sleep(1)
                 elif choixJB == 0:  # Vérifie si il faut faire jouer les bots.
-                    print(f"{R}Tour du joueur :{Y}", i[0])  # i[0] = joueur jouant
-                    caras1 = Jeu.caracteristiquesJoueur(i[0])
-                    print(f"{R}Diamants en sa possession :{Y} {caras1[3]}")  # Nombre de diamants pendant l'expédition
-                    print(f"{R}Relique en sa possession :{Y} {caras1[1]}")  # Nombre de relique pendant l'expédition
-                    caras = Jeu.caracteristiquesJoueur(1)
-                    print(f"{R}Diamants en votre possession :{Y} {caras[3]}")  # Nombre de diamants pendant l'expédition
-                    print(f"{R}Relique(s) en votre possession :{Y} {caras[1]}")
-                    print(f"{R}Nombre de diamants dans votre coffre :{Y} {caras[0]}")  # Nombre de diamants dans le coffre
+                    print("{r}Tour du joueur :{y} {i}".format(r=R,y=Y,i=i[0]))  # i[0] = joueur jouant
+                    caras1 = Jeu.caracteristiquesJoueur(i[0])  # Caractéristique du bot jouant
+                    print("{r}Diamants en sa possession :{y} {c}".format(r=R,y=Y,c=caras1[3]))  # Nombre de diamants pendant l'expédition
+                    print("{r}Relique en sa possession :{y} {c}".format(r=R,y=Y,c=caras1[1]))  # Nombre de relique pendant l'expédition
+                    caras = Jeu.caracteristiquesJoueur(1)  # Caractéristique du joueur
+                    print("{r}Diamants en votre possession :{y} {c}".format(r=R,y=Y,c=caras[3]))  # Nombre de diamants pendant l'expédition
+                    print("{r}Relique(s) en votre possession :{y} {c}".format(r=R,y=Y,c=caras[1]))
+                    print("{r}Nombre de diamants dans votre coffre :{y} {c}".format(r=R,y=Y,c=caras[0]))  # Nombre de diamants dans le coffre
                     print('\n'*2)
                     choix = randint(0,1)  # Choisi entre sortir et rester de façon aléatoire.
                     if choix == 1:
                         Jeu.jouer(i[0],1)
                         print()
-                        print(f"{G}Le joueur {i[0]} a décidé de quitter ce tour !{N}")
+                        print("{g}Le joueur {i} a décidé de quitter ce tour !{n}".format(g=G,i=i[0],n=N))
                         sortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
                     else:
                         # Aucune intéraction nécessaire, le jeu continue pour ces joueurs.
                         print()
-                        print(f"{G}Le joueur {i[0]} a décidé de rester dans le jeu !{N}")
+                        print("{g}Le joueur {i} a décidé de rester dans le jeu !{n}".format(g=G,i=i[0],n=N))
                     time.sleep(3)
         Jeu.sortie(sortis)  # Vérifie que la manche n'est pas fini et réparti le trésor aux joueurs sorties.
     else:
-        print(f"{R}Un obstacle surgit ! Les joueurs restants dans la grotte fuit ! (L'obstacle était {Jeu.tapis[-1][0]}){N}")
+        print("{r}Un obstacle surgit ! Les joueurs restants dans la grotte fuit ! (L'obstacle était {t}){n}".format(r=R,t=Jeu.tapis[-1][0],n=N))
         time.sleep(5)
         Jeu.changementManche()
 
 clear()
-print(f"{R}Fin de la partie.\nLe classement est :{Y}")
+print("{r}Fin de la partie.\nLe classement est :{y}".format(r=R,y=Y))
 for i in Jeu.classement():
-    print('Joueur',i[0],'avec',i[1],'diamants')
+    print('Joueur {i} avec {j} diamants'.format(i=i[0],j=i[1]))
+print(N)

@@ -12,7 +12,7 @@ CARTES = [
     1, 2, 3, 4, 5, 5, 7, 7, 9, 11, 11, 13, 14, 15, 17,
     'Araignée', 'Araignée', 'Araignée', 'Serpent', 'Serpent', 'Serpent',
     'Lave', 'Lave', 'Lave', 'Boulet', 'Boulet', 'Boulet', 'Bélier', 'Bélier', 'Bélier',
-    'Relique','Relique','Relique','Relique','Relique'
+    'Relique'
     ]
 
 
@@ -41,6 +41,7 @@ class Diamant:
         self.tapis = [] # tapis des cartes sorties (list) - [carte, nombre de diamants restants (-1 si monstre)]
         self.relique = []  # des joueurs ayant des reliques (list)
         self.creationJoueurs(nbJoueurs)  # appel de la fonction pour initialiser les caractéristiques (self.joueur)
+        self.joueurssortis = []
     
     def melangeCarte(self) -> None:
         """
@@ -142,6 +143,7 @@ class Diamant:
         Args:
             joueursSorties (list): Liste des joueurs sortis.
         """
+        # SELF.JOUERU SORTI !!!!
         assert len(joueursSorties) <= self.nbJoueurs, "Il ne peut pas avoir plus de joueur sorti que de joueurs en jeu"
         if len(joueursSorties) == 0:
             return
@@ -164,12 +166,14 @@ class Diamant:
                 self.joueurs[k][3] += tresorParPers  # On met le trésor dans le coffre des joueurs sorti
         # Vérifie si il y a qu'un joueur qui sort et une relique sur le tapis.
         if len(joueursSorties)==1 and ['Relique',-2] in self.tapis:
-            i = self.tapis.index(['Relique',-2])
-            y = CARTES.index('Relique')
-            CARTES.pop(y)  # Retire la relique du paquet de carte.
-            self.tapis.pop(i)  # Retire la relique du tapis.
-            self.joueurs[joueursSorties[0]][1] += 1  # Ajoute la relique au joueur.
-            self.relique.append(joueursSorties[0])  # Ajoute le joueur à la liste des reliques
+            # Boucle pour récupérer toutes les reliques du tapis
+            while ['Relique',-2] in self.tapis:
+                i = self.tapis.index(['Relique',-2])
+                y = CARTES.index('Relique')
+                CARTES.pop(y)  # Retire la relique du paquet de carte.
+                self.tapis.pop(i)  # Retire la relique du tapis.
+                self.joueurs[joueursSorties[0]][1] += 1  # Ajoute la relique au joueur.
+                self.relique.append(joueursSorties[0])  # Ajoute le joueur à la liste des reliques
             
     def finManche(self, monstre = False) -> bool:
         """
@@ -196,6 +200,7 @@ class Diamant:
             self.joueursRestants = self.nbJoueurs
         self.tapis = []
         self.manchesRestants -= 1
+        CARTES.append('Relique')  # Ajoute une relique au paquet
 
     def classement(self) -> list:
         """
