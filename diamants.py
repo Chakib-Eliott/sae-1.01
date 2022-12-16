@@ -163,11 +163,14 @@ class Diamant:
                     self.tapis[i][1] = reste
                     break
             for k in joueursSorties:
-                self.joueurs[k][3] += tresorParPers  # On met le trésor dans le coffre des joueurs sorti
+                self.joueurs[k][0] += tresorParPers  # On met le trésor dans le coffre des joueurs sorti
         # Vérifie si il y a qu'un joueur qui sort et une relique sur le tapis.
+        print(3)
         if len(joueursSorties)==1 and ['Relique',-2] in self.tapis:
             # Boucle pour récupérer toutes les reliques du tapis
+            print(1)
             while ['Relique',-2] in self.tapis:
+                print(2)
                 i = self.tapis.index(['Relique',-2])
                 y = CARTES.index('Relique')
                 CARTES.pop(y)  # Retire la relique du paquet de carte.

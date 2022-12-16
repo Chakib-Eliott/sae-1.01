@@ -57,7 +57,6 @@ def getPlayer() -> int:
     Returns :
         int: Nombre de joueurs
     """
-    print(NOMBREJOUEURS)
     return NOMBREJOUEURS
 
 def accueil() -> None:
@@ -144,8 +143,20 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
     global Jeu
     global joueurcarte
     global joueurencours
-    print(Jeu.tapis)
+    
+    print(Jeu.joueurs)
     # Vérifie si c'est la fin du tour
+    if choix == 1:
+        Jeu.joueurssortis.append(joueurencours)
+        listejoueursenjeu = []
+        for k,v in Jeu.joueurs.items():
+            if v[2] == 0:
+                listejoueursenjeu.append(k)
+        if len(listejoueursenjeu) == 1 and choix==1:
+            if listejoueursenjeu[0] == joueurencours:
+                Jeu.changementManche()
+                joueurencours = 1
+                return inigame()
     if finTour(joueurencours):
         # METTRE CARTE SUR TAPIS
         carte_tapis = Jeu.cartes[-1]
@@ -162,10 +173,13 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
         if not(Jeu.piocheCarte()): 
             # APPLIQUE CARTE (donc vérifier joueurs sortis etc.)
             Jeu.sortie(Jeu.joueurssortis)
-            # DIAMANT/RELIQUE
         else:
             # MONSTRE (donc fin manche)
-            pass
+            print('PERDRE A CAUSE DuN PIEGE')
+            Jeu.changementManche()
+            joueurencours = 1
+            return inigame()
+        Jeu.joueurssortis = []
  
 
 
@@ -175,16 +189,6 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
     joueurcarte[joueurencours][1]["text"]=STATUT[Jeu.joueurs[joueurencours][2]][0]
     joueurcarte[joueurencours][1]["fg"]=STATUT[Jeu.joueurs[joueurencours][2]][1]
             
-    if choix == 1:
-        Jeu.joueurssortis.append(joueurencours)
-        listejoueursenjeu = []
-        for k,v in Jeu.joueurs.items():
-            if v[2] == 0:
-                listejoueursenjeu.append(k)
-        if len(listejoueursenjeu) == 0 and choix==1:
-            Jeu.changementManche()
-            joueurencours = 1
-            return inigame()
     
     # CHAGEMENT DE JOUEUR
     joueurencours = prochainJoueur(joueurencours)
@@ -193,14 +197,22 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
     diamants['text'] = 'Diamants :'+str(Jeu.joueurs[joueurencours][3])
     coffre['text'] = 'Coffre :'+str(Jeu.joueurs[joueurencours][0])
     reliques['text'] = 'Reliques :'+str(Jeu.joueurs[joueurencours][1])
-
+    for i in range(1,Jeu.nbJoueurs+1):
+        joueurcarte[i][2]["text"] = 'Diamants : '+str(Jeu.joueurs[i][3])
+        joueurcarte[i][3]["text"] = 'Reliques : '+str(Jeu.joueurs[i][1])
     
             
 def lancementpartieintermediaire():
     global Jeu
     Jeu = D.Diamant(int(getPlayer()), 0) # Création de la partie
-    Jeu.melangeCarte()
     inigame()
+
+def classement():
+    Vider()
+    print(Jeu.classement())
+    print("Fin de la partie.\nLe classement est :")
+    for i in Jeu.classement():
+        Label(root, text='Joueur {i} avec {j} diamants'.format(i=i[0],j=i[1]), background=BACKGROUND).place(x=300, y=300+(Jeu.classement().index(i)*30))
 
 def inigame():
     Vider()
@@ -209,8 +221,11 @@ def inigame():
     global diamants
     global reliques
     global coffre
+    Jeu.melangeCarte()
     Jeu.joueurssortis = []
-
+    
+    if Jeu.manchesRestants == 0:
+        return classement()
 
     # En jeu
     # Manche actuelle
@@ -261,10 +276,10 @@ def inigame():
     sortir.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
     sortir.place(x=520, y=450)
 
+
+
     joueurcarte[1][1]["text"]='Joue...'
     joueurcarte[1][1]["fg"]='#de96ff'
-
-###################
 
     carte_tapis = Jeu.cartes[-1]
     if type(carte_tapis) == int:
@@ -272,13 +287,21 @@ def inigame():
     else:
         carte = Label(image=CARTE_SPECIAL[carte_tapis])
     carte.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
-    if len(Jeu.tapis) < 7:
+    if len(Jeu.tapis) < 6:
         carte.place(x=10+100*len(Jeu.tapis), y=100)
     elif len(Jeu.tapis) < 14:
         carte.place(x=10+100*(len(Jeu.tapis)-7), y=200)
-    Jeu.piocheCarte()    
-accueil()
+    elif len(Jeu.tapis) < 21:
+        carte.place(x=10+100*(len(Jeu.tapis)-7), y=300)
+    if not(Jeu.piocheCarte()): 
+            # APPLIQUE CARTE (donc vérifier joueurs sortis etc.)
+            Jeu.sortie(Jeu.joueurssortis)   
+    for i in range(1,Jeu.nbJoueurs+1):
+        joueurcarte[i][2]["text"] = 'Diamants : '+str(Jeu.joueurs[i][3])
+        joueurcarte[i][3]["text"] = 'Reliques : '+str(Jeu.joueurs[i][1])
 
+
+accueil()
 
 root.mainloop()
 

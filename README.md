@@ -1,6 +1,6 @@
 # Diamants
 
-[center]![iut-velizy](http://eliott-b.tech/iut-velizy/IUT%20Velizy%20Villacoublay%20logo%202020%20Noir.png)[/center]
+![iut-velizy](http://eliott-b.tech/iut-velizy/IUT%20Velizy%20Villacoublay%20logo%202020%20ecran.png)
 
 **Auteurs :** Eliott, Chakib  
 **Années :** 2022-2023   
@@ -73,6 +73,7 @@ Nous avons donc modifié nos 'print' afin de les rendre utilisable avec la méth
 ```python
 print("Hello {w}!".format(w="World"))
 ```
+PROBLEME RELIQUE INTERFACE FRAPHIQUE
 
 ## Idées
 
