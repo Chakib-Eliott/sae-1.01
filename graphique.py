@@ -159,18 +159,19 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
     global joueurencours
 
     # Vérifie si c'est la fin du tour
-    # if choix == 1:
-    #     Jeu.joueurssortis.append(joueurencours)
-    #     listejoueursenjeu = []
-    #     for k,v in Jeu.joueurs.items():
-    #         if v[2] == 0:
-    #             listejoueursenjeu.append(k)
-    #     if len(listejoueursenjeu) == 1 and choix==1:
-    #         if listejoueursenjeu[0] == joueurencours:
-    #             Jeu.changementManche()
-    #             joueurencours = 1
-    #             return inigame()
-            
+    if choix == 1:
+        Jeu.joueurssortis.append(joueurencours)
+        listejoueursenjeu = []
+        for k,v in Jeu.joueurs.items():
+            if v[2] == 0:
+                listejoueursenjeu.append(k)
+        if len(listejoueursenjeu) == 1 and choix==1:
+            if listejoueursenjeu[0] == joueurencours:
+                Jeu.jouer(joueurencours,choix)
+                Jeu.sortie()
+                Jeu.changementManche()
+                joueurencours = 1
+                return inigame()
     if finTour(joueurencours):
         
         # METTRE CARTE SUR TAPIS
@@ -214,7 +215,7 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
             backgroudpiege.place(x=0, y=350)
 
         Jeu.joueurssortis = []
- 
+
     # APPLIQUER LE CHOIX DU JOUEUR
     Jeu.jouer(joueurencours, choix)
     joueurcarte[joueurencours][1]["text"]=STATUT[Jeu.joueurs[joueurencours][2]][0]
@@ -232,7 +233,6 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
         joueurcarte[i][3]["text"] = 'Reliques : '+str(Jeu.joueurs[i][1])
     
 
-
 def lancementpartieintermediaire():
     global Jeu
     Jeu = D.Diamant(int(getPlayer()), 0) # Création de la partie
@@ -243,16 +243,16 @@ def classement():
     Label(root, text='CLASSEMENT :', font=TkFont.Font(size=30, underline=True), background=BACKGROUND).place(x=200, y=50)
         
     Label(root, text='Joueur {i} avec {j} diamants'.format(i=Jeu.classement()[0][0], j=Jeu.classement()[0][1]), background=BACKGROUND).place(x=300, y=200)
-    Or = Label(image=OR,bg=BACKGROUND)
+    Or = Label(image=OR, background=BACKGROUND)
     Or.place(x=260,y=200)
 
     Label(root, text='Joueur {i} avec {j} diamants'.format(i=Jeu.classement()[1][0], j=Jeu.classement()[1][1]), background=BACKGROUND).place(x=300, y=240)
-    Argent = Label(image=ARGENT,bg=BACKGROUND)
+    Argent = Label(image=ARGENT, background=BACKGROUND)
     Argent.place(x=260,y=240)
 
 
     Label(root, text='Joueur {i} avec {j} diamants'.format(i=Jeu.classement()[2][0], j=Jeu.classement()[2][1]), background=BACKGROUND).place(x=300, y=280)
-    Bronze = Label(image=BRONZE,bg=BACKGROUND)
+    Bronze = Label(image=BRONZE, background=BACKGROUND)
     Bronze.place(x=260,y=280)
 
     for k in range(3,len(Jeu.classement())):
@@ -349,9 +349,7 @@ def inigame():
         carte.place(x=10+100*(len(Jeu.tapis)-7), y=200)
     elif len(Jeu.tapis) < 21:
         carte.place(x=10+100*(len(Jeu.tapis)-7), y=300)
-    if not(Jeu.piocheCarte()): 
-            # APPLIQUE CARTE (donc vérifier joueurs sortis etc.)
-            Jeu.sortie()   
+    if not(Jeu.piocheCarte()):
             # Affiche le reste de la carte
             reste = 0
             for i in Jeu.tapis:
@@ -366,4 +364,3 @@ def inigame():
 accueil()
 
 root.mainloop()
-

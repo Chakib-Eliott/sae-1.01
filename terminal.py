@@ -82,7 +82,7 @@ while Jeu.manchesRestants > 0:
     if Jeu.joueursRestants == 0:
         Jeu.changementManche()
     elif Jeu.piocheCarte() != True:  # Vérifie que ce n'est pas la fin de la manche.
-        sortis = []  # Liste des joueurs sorties
+        Jeu.joueurssortis = []  # Liste des joueurs sorties
         for i in Jeu.joueurs.items():
             clear()
             time.sleep(0.5)
@@ -105,7 +105,7 @@ while Jeu.manchesRestants > 0:
                         Jeu.jouer(i[0],1)
                         print()
                         print("{g}Vous avez choisi de quitter ce tour !{n}".format(g=G,n=N))
-                        sortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
+                        Jeu.joueurssortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
                     else:
                         # Aucune intéraction nécessaire, le jeu continue pour ces joueurs.
                         print()
@@ -126,13 +126,13 @@ while Jeu.manchesRestants > 0:
                         Jeu.jouer(i[0],1)
                         print()
                         print("{g}Le joueur {i} a décidé de quitter ce tour !{n}".format(g=G,i=i[0],n=N))
-                        sortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
+                        Jeu.joueurssortis.append(i[0])  # Ajout du joueur dans la liste des joueurs sorties.
                     else:
                         # Aucune intéraction nécessaire, le jeu continue pour ces joueurs.
                         print()
                         print("{g}Le joueur {i} a décidé de rester dans le jeu !{n}".format(g=G,i=i[0],n=N))
                     time.sleep(3)
-        Jeu.sortie(sortis)  # Vérifie que la manche n'est pas fini et réparti le trésor aux joueurs sorties.
+        Jeu.sortie()  # Vérifie que la manche n'est pas fini et réparti le trésor aux joueurs sorties.
     else:
         print("{r}Un obstacle surgit ! Les joueurs restants dans la grotte fuit ! (L'obstacle était {t}){n}".format(r=R,t=Jeu.tapis[-1][0],n=N))
         time.sleep(5)

@@ -154,7 +154,7 @@ class Diamant:
             self.joueurs[joueur][2] = 1  # On le sort de la mine
             self.joueurs[joueur][0] += self.joueurs[joueur][3]  # On lui met son trésor courant dans son coffre
             self.joueurs[joueur][3] = 0  # On vide le trésor courant
-            self.joueurssortis.append(joueur)
+            # self.joueurssortis.append(joueur)
 
     def sortie(self) -> None:
         """
@@ -165,7 +165,7 @@ class Diamant:
         if len(self.joueurssortis) == 0:
             return
         # Calcule le nombre de diamants restants sur le tapis et le répartit entre les joueurs sortis
-        if len(self.joueurssortis) != 0: 
+        if len(self.joueurssortis) != 0:
             tresorParPers = 0
             for i in range(len(self.tapis)):
                 if self.tapis[i][1] > 0:
@@ -222,7 +222,7 @@ class Diamant:
             while not fin:
                 if self.joueurs[i][0] >= self.joueurs[classement[j][0]][0]:
                     classement.insert(j,[i,self.joueurs[i][0]])
-                    fin = True
+                    # fin = True
                 else:
                     j+=1
                 if j == len(classement):

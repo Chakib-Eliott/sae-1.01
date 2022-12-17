@@ -8,14 +8,16 @@
 
 ## Sommaire
 
-1. [Description](#description)   
-2. [Règle du jeu](#règle-du-jeu)   
-3. [Contenu du jeu](#contenu-du-jeu)   
-4. [Fonctionnement](#fonctionnement)   
-5. [Bugs rencontrés](#bugs-rencontrés)   
-6. [Idées](#idées)   
-7. [Illustration des cartes](#illustration-des-cartes)    
-8. [Captures d'écran](#captures-décran)
+- [Diamants](#diamants)
+  - [Sommaire](#sommaire)
+  - [Description](#description)
+  - [Règle du jeu](#règle-du-jeu)
+  - [Contenu du jeu](#contenu-du-jeu)
+  - [Fonctionnement](#fonctionnement)
+  - [Bugs rencontrés](#bugs-rencontrés)
+  - [Idées](#idées)
+  - [Illustration des cartes](#illustration-des-cartes)
+  - [Captures d'écran](#captures-décran)
 
 ## Description
 
@@ -73,7 +75,7 @@ Nous avons donc modifié nos 'print' afin de les rendre utilisable avec la méth
 ```python
 print("Hello {w}!".format(w="World"))
 ```
-PROBLEME RELIQUE INTERFACE FRAPHIQUE
+Le cinquième bug était un bug où le **dernier joueur sorti ne récupérait jamais son bultin**. Nous avons règler ce problème après de longs moments d'analyse du code en remarquant que ne finissions le tour avant de faire jouer le joueur.
 
 ## Idées
 
