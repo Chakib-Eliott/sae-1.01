@@ -154,49 +154,42 @@ class Diamant:
             self.joueurs[joueur][2] = 1  # On le sort de la mine
             self.joueurs[joueur][0] += self.joueurs[joueur][3]  # On lui met son trésor courant dans son coffre
             self.joueurs[joueur][3] = 0  # On vide le trésor courant
+            self.joueurssortis.append(joueur)
 
-    def sortie(self, joueursSorties: list) -> None:
+    def sortie(self) -> None:
         """
         Est appelé lorsque tous les joueurs ont fait leurs choix,
         les joueurs sortis se répartissent le trésor sur le tapis.
-
-        Args:
-            joueursSorties (list): Liste des joueurs sortis.
         """
-        # SELF.JOUERU SORTI !!!!
-        assert len(joueursSorties) <= self.nbJoueurs, "Il ne peut pas avoir plus de joueur sorti que de joueurs en jeu"
-        if len(joueursSorties) == 0:
+        assert len(self.joueurssortis) <= self.nbJoueurs, "Il ne peut pas avoir plus de joueur sorti que de joueurs en jeu"
+        if len(self.joueurssortis) == 0:
             return
         # Calcule le nombre de diamants restants sur le tapis et le répartit entre les joueurs sortis
-        if len(joueursSorties) != 0: 
+        if len(self.joueurssortis) != 0: 
             tresorParPers = 0
             for i in range(len(self.tapis)):
                 if self.tapis[i][1] > 0:
                     tresorParPers += self.tapis[i][1]
                     self.tapis[i][1] = 0
-            reste = tresorParPers%len(joueursSorties) 
-            tresorParPers -= reste
-            tresorParPers //= len(joueursSorties)
+            reste = tresorParPers%len(self.joueurssortis)
+            tresorParPers //= len(self.joueurssortis)
             # Remet le reste sur le tapis sur la première carte de valeur qu'on trouve
             for i in range(len(self.tapis)):
-                if self.tapis[i][1] != -1:
+                if type(self.tapis[i][0]) == int:
                     self.tapis[i][1] = reste
                     break
-            for k in joueursSorties:
+            for k in self.joueurssortis:
                 self.joueurs[k][0] += tresorParPers  # On met le trésor dans le coffre des joueurs sorti
         # Vérifie si il y a qu'un joueur qui sort et une relique sur le tapis.
-        print(3)
-        if len(joueursSorties)==1 and ['Relique',-2] in self.tapis:
+        if len(self.joueurssortis)==1 and ['Relique',-2] in self.tapis:
             # Boucle pour récupérer toutes les reliques du tapis
-            print(1)
             while ['Relique',-2] in self.tapis:
-                print(2)
                 i = self.tapis.index(['Relique',-2])
                 y = CARTES.index('Relique')
                 CARTES.pop(y)  # Retire la relique du paquet de carte.
                 self.tapis.pop(i)  # Retire la relique du tapis.
-                self.joueurs[joueursSorties[0]][1] += 1  # Ajoute la relique au joueur.
-                self.relique.append(joueursSorties[0])  # Ajoute le joueur à la liste des reliques
+                self.joueurs[self.joueurssortis[0]][1] += 1  # Ajoute la relique au joueur.
+                self.relique.append(self.joueurssortis[0])  # Ajoute le joueur à la liste des reliques
         
     def changementManche(self) -> None:
         """
