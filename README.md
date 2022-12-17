@@ -101,17 +101,17 @@ Voici à quoi ressemble les cartes en jeu :
 
 ## Captures d'écran
 
-*Au démarage du jeu*<br>
+- *Au démarage du jeu*<br>
 ![demarage](asset/captures/main.png)<br>
-*Affichage dans le terminal*<br>
+- *Affichage dans le terminal*<br>
 ![affichage-terminal](asset/captures/affichage-t.png)<br>
-*Classement dans le terminal*<br>
+- *Classement dans le terminal*<br>
 ![classement-terminal](asset/captures/classement-t.png)<br>
-*Page d'accueil de l'interface graphique*<br>
+- *Page d'accueil de l'interface graphique*<br>
 ![accueil-graphique](asset/captures/accueil-g.png)<br>
-*Partie dans l'interface graphique*<br>
+- *Partie dans l'interface graphique*<br>
 ![partie-graphique](asset/captures/partie-g.png)<br>
-*Classement dans l'interface graphique*<br>
+- *Classement dans l'interface graphique*<br>
 ![classement-graphique](asset/captures/classement-g.png)
 
 *(Les images ont été prise sur un Mac, les graphismes de la page sont donc pas ceux d'un ordinateur sur Linux ou Windows)*
