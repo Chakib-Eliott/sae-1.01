@@ -10,6 +10,7 @@ import diamants as D  # Les fonction qui permettent de faire fonctionner le jeu
 from tkinter import *  # Natif à Python
 import tkinter.font as TkFont  # Natif à Python
 from random import choice  # Natif à Python
+import webbrowser # Natif à python
 
 
 # Initialisation de la fenêtre de jeu.
@@ -39,6 +40,11 @@ DIAMANTCARTE2 = PhotoImage(file='./asset/cartes/diamant-rubis-2.png')
 SERPENTCARTE = PhotoImage(file='./asset/cartes/diamant-snake.png')
 ARAIGNEESCARTE = PhotoImage(file='./asset/cartes/diamant-spiders.png')
 
+# Initialisation des images des médailles.
+OR = PhotoImage(file='./asset/medailles/test.png')
+ARGENT = PhotoImage(file='./asset/medailles/test.png')
+BRONZE = PhotoImage(file='./asset/medailles/test.png')
+
 CARTE_SPECIAL = {
     'Relique':RELIQUECARTE, 'Boulet':BOULETCARTE, 'Bélier':BELIERCARTE,
     'Lave':LAVECARTE, 'Serpent':SERPENTCARTE, 'Araignée':ARAIGNEESCARTE
@@ -49,6 +55,9 @@ CARTE_DIAMANT = [DIAMANTCARTE1,DIAMANTCARTE2]
 STATUT = {0:["Explore", '#58bf4e'], 1:["Sorti", '#d94636']}
 
 NOMBREJOUEURS = 3
+
+def callback(event):
+    webbrowser.open_new(event.widget.cget("text"))
 
 def getPlayer() -> int:
     """
@@ -61,7 +70,6 @@ def getPlayer() -> int:
 
 def accueil() -> None:
     Vider()
-
     def plusplayer() -> None:
         global NOMBREJOUEURS
         value = nbPlayers.get()
@@ -77,7 +85,13 @@ def accueil() -> None:
             nbPlayers.delete(0,END)
             nbPlayers.insert(0,str(int(value)-1))
             NOMBREJOUEURS = nbPlayers.get()
-            
+    
+    def githublink():
+        webbrowser.open_new(r"https://github.com/Chakib-Eliott/sae-1.01")
+    git = Button(root, text ="GITHUB", activebackground='#89e37f', command=githublink )
+    git.place(x=700, y= 650)
+
+    
     # Logo diamants
     diamant = Label(image=DIAMANTIMAGE)
     diamant.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
@@ -143,8 +157,7 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
     global Jeu
     global joueurcarte
     global joueurencours
-    
-    print(Jeu.joueurs)
+
     # Vérifie si c'est la fin du tour
     if choix == 1:
         Jeu.joueurssortis.append(joueurencours)
@@ -158,6 +171,7 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
                 joueurencours = 1
                 return inigame()
     if finTour(joueurencours):
+        
         # METTRE CARTE SUR TAPIS
         carte_tapis = Jeu.cartes[-1]
         if type(carte_tapis) == int:
@@ -169,16 +183,35 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
             carte.place(x=10+100*len(Jeu.tapis), y=100)
         elif len(Jeu.tapis) < 14:
             carte.place(x=10+100*(len(Jeu.tapis)-7), y=200)
+        elif len(Jeu.tapis) < 21:
+            carte.place(x=10+100*(len(Jeu.tapis)-7), y=300)
         # Vérifie que la carte n'est pas un piège
         if not(Jeu.piocheCarte()): 
             # APPLIQUE CARTE (donc vérifier joueurs sortis etc.)
             Jeu.sortie(Jeu.joueurssortis)
+            # Affiche le reste de la carte
+            reste = 0
+            for i in Jeu.tapis:
+                if i[1] > 0:
+                    reste+= i[1]
+            lereste['text'] = str(reste)
+            
         else:
-            # piege (donc fin manche)
-            print('PERDRE A CAUSE DuN PIEGE')
+            piege_nom = Jeu.tapis[-1][0]
+            
             Jeu.changementManche()
-            joueurencours = 1
-            return inigame()
+
+
+            backgroudpiege = Canvas(root, width=1000, height=700, bg='#E6D8B7')
+
+            piege_text = Label(root, text=piege_nom+ " est apparut une seconde fois, tous les joueurs prennent la fuite en faisant tomber tous le butin qu'ils ont dans les poches.")
+            piege_text.place(x=170, y=400)
+            piege = Label(image=CARTE_SPECIAL[piege_nom])
+            piege.place(x=440,y=450)
+            piegeboutton = Button(root, text ="Manche suivante", activebackground='#89e37f', command=inigame)
+            piegeboutton.place(x=440, y= 550)
+            backgroudpiege.place(x=0, y=350)
+
         Jeu.joueurssortis = []
  
 
@@ -188,7 +221,6 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
     Jeu.jouer(joueurencours, choix)
     joueurcarte[joueurencours][1]["text"]=STATUT[Jeu.joueurs[joueurencours][2]][0]
     joueurcarte[joueurencours][1]["fg"]=STATUT[Jeu.joueurs[joueurencours][2]][1]
-            
     
     # CHAGEMENT DE JOUEUR
     joueurencours = prochainJoueur(joueurencours)
@@ -201,7 +233,8 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
         joueurcarte[i][2]["text"] = 'Diamants : '+str(Jeu.joueurs[i][3])
         joueurcarte[i][3]["text"] = 'Reliques : '+str(Jeu.joueurs[i][1])
     
-            
+
+
 def lancementpartieintermediaire():
     global Jeu
     Jeu = D.Diamant(int(getPlayer()), 0) # Création de la partie
@@ -209,10 +242,25 @@ def lancementpartieintermediaire():
 
 def classement():
     Vider()
-    print(Jeu.classement())
-    print("Fin de la partie.\nLe classement est :")
-    for i in Jeu.classement():
-        Label(root, text='Joueur {i} avec {j} diamants'.format(i=i[0],j=i[1]), background=BACKGROUND).place(x=300, y=300+(Jeu.classement().index(i)*30))
+    Label(root, text='CLASSEMENT :', font=TkFont.Font(size=30, underline=True), background=BACKGROUND).place(x=200, y=50)
+        
+    Label(root, text='Joueur {i} avec {j} diamants'.format(i=Jeu.classement()[0][0], j=Jeu.classement()[0][1]), background=BACKGROUND).place(x=300, y=200)
+    Or = Label(image=OR)
+    Or.place(x=260,y=200)
+
+    Label(root, text='Joueur {i} avec {j} diamants'.format(i=Jeu.classement()[1][0], j=Jeu.classement()[1][1]), background=BACKGROUND).place(x=300, y=240)
+    Argent = Label(image=ARGENT)
+    Argent.place(x=260,y=240)
+
+
+    Label(root, text='Joueur {i} avec {j} diamants'.format(i=Jeu.classement()[2][0], j=Jeu.classement()[2][1]), background=BACKGROUND).place(x=300, y=280)
+    Bronze = Label(image=BRONZE)
+    Bronze.place(x=260,y=280)
+
+    for k in range(3,len(Jeu.classement())):
+        Label(root, text=str(k)+'. Joueur {i} avec {j} diamants'.format(i=Jeu.classement()[k][0],j=Jeu.classement()[k][1]), background=BACKGROUND).place(x=600, y=300+(k*30))
+
+
 
 def inigame():
     Vider()
@@ -221,6 +269,16 @@ def inigame():
     global diamants
     global reliques
     global coffre
+
+    global lereste
+    leresteconst = Label(root, text='Diamants sur le tapis :', background=BACKGROUND)
+    leresteconst.place(x=575, y=25)
+    lereste = Label(root, text='0', background=BACKGROUND)
+    lereste.place(x=695, y=25)
+    
+
+    joueurencours = 1
+
     Jeu.melangeCarte()
     Jeu.joueurssortis = []
     
@@ -256,16 +314,16 @@ def inigame():
     joueurcarte.insert(0, 'test') # A CORRIGER
     for i in range(1,len(joueurcarte)):
         joueurcarte[i][0] = Label(root, text='Joueur '+str(i)+': ', bg=BACKGROUND)
-        joueurcarte[i][0].place(x=850,y=80+i*70)
+        joueurcarte[i][0].place(x=850,y=30+i*70)
 
         joueurcarte[i][1] = Label(root, text='Explore', bg=BACKGROUND, fg='#58bf4e')
-        joueurcarte[i][1].place(x=910,y=80+i*70)
+        joueurcarte[i][1].place(x=910,y=30+i*70)
 
         joueurcarte[i][2] = Label(root, text='Diamants : '+str(Jeu.joueurs[i][3]), bg=BACKGROUND)
-        joueurcarte[i][2].place(x=850,y=100+i*70)
+        joueurcarte[i][2].place(x=850,y=50+i*70)
 
         joueurcarte[i][3] = Label(root, text='Reliques : '+str(Jeu.joueurs[i][1]), bg=BACKGROUND)
-        joueurcarte[i][3].place(x=850,y=120+i*70)
+        joueurcarte[i][3].place(x=850,y=70+i*70)
 
 
     rester = Button(image=RESTERIMAGE, text='Rester', compound=TOP, activebackground='#a9f099', command=lambda:Jouer(0))
@@ -296,6 +354,12 @@ def inigame():
     if not(Jeu.piocheCarte()): 
             # APPLIQUE CARTE (donc vérifier joueurs sortis etc.)
             Jeu.sortie(Jeu.joueurssortis)   
+            # Affiche le reste de la carte
+            reste = 0
+            for i in Jeu.tapis:
+                if i[1] > 0:
+                    reste+= i[1]
+            lereste['text'] = str(reste)
     for i in range(1,Jeu.nbJoueurs+1):
         joueurcarte[i][2]["text"] = 'Diamants : '+str(Jeu.joueurs[i][3])
         joueurcarte[i][3]["text"] = 'Reliques : '+str(Jeu.joueurs[i][1])
@@ -305,9 +369,3 @@ accueil()
 
 root.mainloop()
 
-
-# Max 25 cartes
-# Pioche de cartes (récupérer cartes offi)
-# Fond officiel du plateau
-# Jeu fonctionnel enft 
-# sleep entre les tours pour rendre + cohérent 
