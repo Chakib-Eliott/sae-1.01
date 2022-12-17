@@ -75,7 +75,8 @@ Nous avons donc modifié nos 'print' afin de les rendre utilisable avec la méth
 ```python
 print("Hello {w}!".format(w="World"))
 ```
-Le cinquième bug était un bug où le **dernier joueur sorti ne récupérait jamais son bultin**. Nous avons règler ce problème après de longs moments d'analyse du code en remarquant que ne finissions le tour avant de faire jouer le joueur.
+Le cinquième bug était un bug où le **dernier joueur sorti ne récupérait jamais son bultin**. Nous avons règler ce problème après de longs moments d'analyse du code en remarquant que ne finissions le tour avant de faire jouer le joueur.<br>
+Le sixième bug est que lors qu'on joue avec des **bots dans l'interface graphique**, on ne **voit pas leurs actions** et les tours se téléportent. Ce problème n'a pas pu être réglé car nous n'avons pas trouvé la solution compatible avec le module 'Tkinter' qui n'est pas adapté au module 'sleep'.
 
 ## Idées
 
@@ -100,7 +101,20 @@ Voici à quoi ressemble les cartes en jeu :
 
 ## Captures d'écran
 
-*à ajouter*
+*Au démarage du jeu*
+![demarage](asset/captures/main.png)
+*Affichage dans le terminal*
+![affichage-terminal](asset/captures/affichage-t.png)
+*Classement dans le terminal*
+![classement-terminal](asset/captures/classement-t.png)
+*Page d'accueil de l'interface graphique*
+![accueil-graphique](asset/captures/accueil-g.png)
+*Partie dans l'interface graphique*
+![partie-graphique](asset/captures/partie-g.png)
+*Classement dans l'interface graphique*
+![classement-graphique](asset/captures/classement-g.png)
+
+*(Les images ont été prise sur un Mac, les graphismes de la page sont donc pas ceux d'un ordinateur sur Linux ou Windows)*
 
 <br>
 
