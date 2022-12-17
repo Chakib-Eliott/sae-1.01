@@ -222,7 +222,7 @@ class Diamant:
             while not fin:
                 if self.joueurs[i][0] >= self.joueurs[classement[j][0]][0]:
                     classement.insert(j,[i,self.joueurs[i][0]])
-                    # fin = True
+                    fin = True
                 else:
                     j+=1
                 if j == len(classement):

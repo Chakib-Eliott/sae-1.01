@@ -9,8 +9,8 @@ Ce jeu est développé dans le cadre d'une SAé (un projet) avec l'IUT de Véliz
 import diamants as D  # Les fonction qui permettent de faire fonctionner le jeu
 from tkinter import *  # Natif à Python
 import tkinter.font as TkFont  # Natif à Python
-from random import choice  # Natif à Python
-import webbrowser # Natif à python
+from random import choice,randint  # Natif à Python
+import webbrowser  # Natif à python
 
 
 # Initialisation de la fenêtre de jeu.
@@ -97,8 +97,10 @@ def accueil() -> None:
     diamant.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
     diamant.place(x=0, y=0)
 
-    # Choix bot ou non
-    bots = Checkbutton(root, text = "Bots", height = 2, width = 10, bg=BACKGROUND, activebackground=BACKGROUND)
+    # Choix bot ou 
+    global botvar
+    botvar = IntVar()
+    bots = Checkbutton(root, text = "Bots", variable=botvar, height = 2, width = 10, bg=BACKGROUND, activebackground=BACKGROUND, onvalue = 1, offvalue = 0)
     bots.place(x=750, y=300)
 
     # Label nombre joueurs
@@ -157,7 +159,7 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
     global Jeu
     global joueurcarte
     global joueurencours
-
+    
     # Vérifie si c'est la fin du tour
     if choix == 1:
         Jeu.joueurssortis.append(joueurencours)
@@ -231,6 +233,9 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
     for i in range(1,Jeu.nbJoueurs+1):
         joueurcarte[i][2]["text"] = 'Diamants : '+str(Jeu.joueurs[i][3])
         joueurcarte[i][3]["text"] = 'Reliques : '+str(Jeu.joueurs[i][1])
+    if botvar.get()==1 and joueurencours!=1:
+        choix = randint(0,1)
+        Jouer(choix)
     
 
 def lancementpartieintermediaire():
