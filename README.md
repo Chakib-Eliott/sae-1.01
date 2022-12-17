@@ -102,15 +102,15 @@ Voici à quoi ressemble les cartes en jeu :
 ## Captures d'écran
 
 *Au démarage du jeu*
-![demarage](asset/captures/main.png)
+![demarage](asset/captures/main.png)<br>
 *Affichage dans le terminal*
-![affichage-terminal](asset/captures/affichage-t.png)
+![affichage-terminal](asset/captures/affichage-t.png)<br>
 *Classement dans le terminal*
-![classement-terminal](asset/captures/classement-t.png)
+![classement-terminal](asset/captures/classement-t.png)<br>
 *Page d'accueil de l'interface graphique*
-![accueil-graphique](asset/captures/accueil-g.png)
+![accueil-graphique](asset/captures/accueil-g.png)<br>
 *Partie dans l'interface graphique*
-![partie-graphique](asset/captures/partie-g.png)
+![partie-graphique](asset/captures/partie-g.png)<br>
 *Classement dans l'interface graphique*
 ![classement-graphique](asset/captures/classement-g.png)
 
