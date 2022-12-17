@@ -49,7 +49,8 @@ class Diamant:
         Mélange le paquet de cartes.
         """
         self.cartes = sample(CARTES, len(CARTES))  # Utilise la méthode sample de random pour mélanger le paquet de carte.
-    
+        assert len(self.cartes) == len(CARTES), "La taille du pack mélangé doit correspondre à la taille du paquet original"
+        
     def creationJoueurs(self, nbJoueurs: int) -> None:
         """
         Crée le dictionnaire comprenant les caractéristiques de chaque joueur.
@@ -128,6 +129,7 @@ class Diamant:
         Args:
             carte (int): La carte sortie.
         """
+        assert carte in CARTES, "La carte doit exister"
         tresorPerPers = carte // self.joueursRestants  # Défini le nb de diamants par personne
         self.tapis.append([carte, carte % self.joueursRestants])  # Défini le reste des diamants et l'assigne à la carte sur le tapis
         for i in range(1, self.nbJoueurs+1):
@@ -147,6 +149,8 @@ class Diamant:
         Returns:
             bool: Si fin de manche.
         """
+        assert choix in [0,1], "Le choix du joueur doit être 0 ou 1"
+        assert joueur in list(range(1,self.nbJoueurs+1)), "Le joueur doit exister"
         if self.joueursRestants == 0 :
             return True
         if self.joueurs[joueur][2]==0 and choix==1:  # Si le joueur est encore en jeu et décide de sortir
@@ -228,4 +232,5 @@ class Diamant:
                 if j == len(classement):
                     fin = True
                     classement.append([i,self.joueurs[i][0]])
+        assert len(classement) == self.nbJoueurs, "Le classement doit faire la taille des joueurs."
         return classement

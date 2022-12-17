@@ -64,6 +64,7 @@ def affichageCourant(instruction = '') -> None:
     Args:
         instruction (str): Instruction du jeu.
     """
+    assert type(instruction) == str, "L'argument doit être une chaine de caractère"
     print("{r}INSTRUCTION : {y}{i}".format(r=R,y=Y,i=instruction))
     print()
     print("{r}Manche : {y}{m}/5".format(r=R,y=Y,m=6-Jeu.manchesRestants))

@@ -56,7 +56,7 @@ STATUT = {0:["Explore", '#58bf4e'], 1:["Sorti", '#d94636']}
 
 NOMBREJOUEURS = 3
 
-def callback(event):
+def callback(event) -> None:
     webbrowser.open_new(event.widget.cget("text"))
 
 def getPlayer() -> int:
@@ -69,8 +69,16 @@ def getPlayer() -> int:
     return NOMBREJOUEURS
 
 def accueil() -> None:
+    """
+    Défini l'accueil de l'interface graphique.
+    """
     Vider()
+    
+    
     def plusplayer() -> None:
+        """
+        Gère le bouton '+' de l'accueil.
+        """
         global NOMBREJOUEURS
         value = nbPlayers.get()
         if int(value) < 8:
@@ -79,6 +87,9 @@ def accueil() -> None:
             NOMBREJOUEURS = nbPlayers.get()
 
     def minusplayer() -> None:
+        """
+        Gère le bouton '-' de l'accueil.
+        """
         global NOMBREJOUEURS
         value = nbPlayers.get()
         if int(value) > 3:
@@ -87,17 +98,21 @@ def accueil() -> None:
             NOMBREJOUEURS = nbPlayers.get()
     
     def githublink():
+        """
+        Gère le bouton du GitHub de l'accueil.
+        """
         webbrowser.open_new(r"https://github.com/Chakib-Eliott/sae-1.01")
+        
+    
     git = Button(root, text ="GITHUB", activebackground='#89e37f', command=githublink )
     git.place(x=700, y= 650)
-
     
     # Logo diamants
     diamant = Label(image=DIAMANTIMAGE)
     diamant.configure(bg=BACKGROUND)  # Met la couleur du fond en fond de l'image PNG
     diamant.place(x=0, y=0)
 
-    # Choix bot ou 
+    # Choix bot
     global botvar
     botvar = IntVar()
     bots = Checkbutton(root, text = "Bots", variable=botvar, height = 2, width = 10, bg=BACKGROUND, activebackground=BACKGROUND, onvalue = 1, offvalue = 0)
@@ -135,9 +150,21 @@ def Vider() -> None:
     for widget in root.winfo_children():
         widget.destroy()
 
+
 joueurencours = 1
 
+
 def prochainJoueur(joueuractuel: int) -> int:
+    """
+    Indique le prochain joueur à jouer.
+
+    Args:
+        joueuractuel (int): Joueur qui joue actuellement
+
+    Returns:
+        int: Prochain joueur
+    """
+    assert joueuractuel in list(range(1,Jeu.nbJoueurs+1)), "Le joueur doit exister"
     prochain = (joueuractuel)%(Jeu.nbJoueurs)+1
     if Jeu.joueurs[prochain][2] == 0:
         return prochain
@@ -145,6 +172,16 @@ def prochainJoueur(joueuractuel: int) -> int:
         return prochainJoueur(prochain)
 
 def finTour(joueuractuel: int) -> bool:
+    """
+    Indique si c'est la fin du tour.
+
+    Args:
+        joueuractuel (int): Le joueur actuel
+
+    Returns:
+        bool: Fin du tour ou non
+    """
+    assert joueuractuel in list(range(1,Jeu.nbJoueurs+1)), "Le joueur doit exister"
     listejoueursenjeu = []
     for k,v in Jeu.joueurs.items():
         if v[2] == 0:
@@ -153,9 +190,14 @@ def finTour(joueuractuel: int) -> bool:
         return True
     return False
 
-def Jouer(choix: int): # Quand le joueur en cours à cliquer
-    # 0 = rester
-    # 1 = sortir
+def Jouer(choix: int) -> None: # Quand le joueur en cours à cliquer
+    """
+    Fait jouer le joueur.
+
+    Args:
+        choix (int): Choix du joueur (0 rester, 1 sortir)
+    """
+    assert choix in [0,1], "Le choix doit être 0 ou 1"
     global Jeu
     global joueurcarte
     global joueurencours
@@ -238,12 +280,18 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
         Jouer(choix)
     
 
-def lancementpartieintermediaire():
+def lancementpartieintermediaire() -> None:
+    """
+    Génère et lance la partie.
+    """
     global Jeu
     Jeu = D.Diamant(int(getPlayer()), 0) # Création de la partie
     inigame()
 
-def classement():
+def classement() -> None:
+    """
+    Affiche le classement.
+    """
     Vider()
     Label(root, text='CLASSEMENT :', font=TkFont.Font(size=30, underline=True), background=BACKGROUND).place(x=200, y=50)
         
@@ -265,7 +313,10 @@ def classement():
 
 
 
-def inigame():
+def inigame() -> None:
+    """
+    Gère la partie.
+    """
     Vider()
     global Jeu
     global joueurcarte
