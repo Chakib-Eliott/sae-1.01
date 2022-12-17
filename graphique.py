@@ -174,7 +174,7 @@ def Jouer(choix: int): # Quand le joueur en cours à cliquer
             # APPLIQUE CARTE (donc vérifier joueurs sortis etc.)
             Jeu.sortie(Jeu.joueurssortis)
         else:
-            # MONSTRE (donc fin manche)
+            # piege (donc fin manche)
             print('PERDRE A CAUSE DuN PIEGE')
             Jeu.changementManche()
             joueurencours = 1

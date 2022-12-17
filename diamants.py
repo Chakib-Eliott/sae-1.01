@@ -26,8 +26,9 @@ class Diamant:
         cartes : liste qui représente le paquet de carte
         manchesRestants : entier défini à 5 par défaut qui indique le nombre de manches restantes
         joueurs : dictionnaire qui indique les caractéristiques des joueurs (nombre de diamants permanents, nombre de reliques, en jeu ou non, nombre de diamants)
-        tapis : dictionnaire qui montre le tapis de cartes ainsi que les diamants restants dessus (-1 = monstre)
+        tapis : dictionnaire qui montre le tapis de cartes ainsi que les diamants restants dessus (-1 = piege)
         relique : liste des joueurs ayant obtenu des reliques
+        joueurssortie : liste des joueurs sorties pendant le tour
     """
 
     def __init__(self, nbJoueurs: int, typeJeu: bool) -> None:
@@ -38,10 +39,10 @@ class Diamant:
         self.typeJeu = typeJeu  # 0 joueurs | 1 IA (int)
         self.manchesRestants = 5  # nombre manches restantes (int)
         self.joueurs = {}  # caractéristique des joueurs (dict) - joueur : nb de diamants permanants, nb de relique, en jeu ou non, nb diamants temporaires
-        self.tapis = [] # tapis des cartes sorties (list) - [carte, nombre de diamants restants (-1 si monstre)]
+        self.tapis = [] # tapis des cartes sorties (list) - [carte, nombre de diamants restants (-1 si piege)]
         self.relique = []  # des joueurs ayant des reliques (list)
         self.creationJoueurs(nbJoueurs)  # appel de la fonction pour initialiser les caractéristiques (self.joueur)
-        self.joueurssortis = []
+        self.joueurssortis = []  # joueurs sorties pendant le tour (list)
     
     def melangeCarte(self) -> None:
         """
@@ -52,6 +53,11 @@ class Diamant:
     def creationJoueurs(self, nbJoueurs: int) -> None:
         """
         Crée le dictionnaire comprenant les caractéristiques de chaque joueur.
+        La clée du dictionnaire est le numéro du joueur.
+        Le 1er argument est le nombre de diamants permanant du joueur.
+        Le 2ème argument est le nombre de relique que possède le joueur.
+        Le 3ème argument est l'état du joueur (0 si il explore, 1 si il est sortie).
+        Le 4ème argument est le trésor que le joueur possède pendant l'expédition.
 
         Args:
             nbJoueurs (int): Nombre de joueur.
@@ -59,12 +65,25 @@ class Diamant:
         assert nbJoueurs>=3 and nbJoueurs<=8, "Le jeu doit contenir au moins 3 joueurs et au maximum 8 joueurs."
         for i in range(1, nbJoueurs+1):
             self.joueurs[i] = [0, 0, 0, 0]  # [Trésor (nb diamants), nombre de reliques, etat (0 mine, 1 sortie), Trésor courant]
+
+    def caracteristiquesJoueur(self, joueur: int) -> list:
+        """
+        Récupère les caractéristiques d'un joueur en particulier.
+
+        Args:
+            joueur (int): Le joueur dont on veut récupérer les caractéristiques.
+
+        Returns:
+            list: Les caractéristiques du joueur.
+        """
+        assert joueur in self.joueurs.keys(), "Le joueur doit exister."
+        return self.joueurs[joueur]
     
     def piocheCarte(self) -> bool:
         """
-        Pioche une carte du deck et la mets sur le tapis.
-        Si un monstre sort on vérifie qu'il ne soit pas déjà sortie une fois
-        et si c'est la deuxième fois on retire le monstre des cartes et on défini la fin de manche.
+        Pioche une carte du paquet de cartes et la mets sur le tapis.
+        Si un piège sort on vérifie qu'il ne soit pas déjà sortie une fois
+        et si c'est la deuxième fois on retire le piège des cartes et on défini la fin de manche.
         
         Returns:
             bool: Fin de manche
@@ -72,35 +91,35 @@ class Diamant:
         carte = self.cartes.pop(-1)  # Retire du paquet de carte la carte
         if type(carte) == int:  # SI c'est une carte de diamants
             self.repartitionTresor(carte)  # On répartit le trésor
-        else:  # Si c'est un monstre (ou une relique mais on verra plus tard)
-            if carte == 'Relique':
+        else:  # Si c'est un piège ou une relique
+            if carte == 'Relique':  # Si c'est une carte diamant
                 self.tapis.append([carte, -2])
             else:
                 self.tapis.append([carte, -1])  # On ajoute la carte au tapis
-                monstre = self.verificationMonstre()  # On vérifie si la dernière carte monstre est déjà sorti une fois
-                if monstre[0] == True:  # Si c'est le cas
-                    CARTES.remove(monstre[1])  # On la retire du jeu jusqu'à la fin de la partie
-                    return self.finManche(True)  # on appel la fin de la manche
+                piege = self.verificationPiege()  # On vérifie si la dernière carte piège est déjà sorti une fois
+                if piege[0] == True:  # Si c'est le cas
+                    CARTES.remove(piege[1])  # On la retire du jeu jusqu'à la fin de la partie
+                    return True  # on appel la fin de la manche
 
-    def verificationMonstre(self) -> tuple:
+    def verificationPiege(self) -> tuple:
         """
-        Vérifie si une carte monstre est déjà sortie et indique du quel monstre s'agit-il.
+        Vérifie si une carte piège est déjà sortie et indique du quel piège s'agit-il.
 
         Returns:
             tuple[bool, str]: la carte est déjà sortie ou non, la carte(s) en question.
         """
         sortie = False
-        monstresSorties = []
-        monstre = None
+        piegeSorties = []
+        piege = None
         for i in self.tapis:
             if not type(i[0]) == int:
-                monstresSorties.append(i[0])
-        for j in range(len(monstresSorties)):
-            for k in range(len(monstresSorties)):
-                if j!=k and monstresSorties[j]==monstresSorties[k]:
-                    monstre = monstresSorties[j]
+                piegeSorties.append(i[0])
+        for j in range(len(piegeSorties)):
+            for k in range(len(piegeSorties)):
+                if j!=k and piegeSorties[j]==piegeSorties[k]:
+                    piege = piegeSorties[j]
                     sortie = True
-        return sortie, monstre
+        return sortie, piege
 
     def repartitionTresor(self, carte: int) -> None:
         """
@@ -118,17 +137,18 @@ class Diamant:
     def jouer(self, joueur: int, choix = 1) -> bool:
         """
         Applique l'action choisie par le joueur (rentrer ou rester).
-        La fonction est appeler de base pour faire sortir le joueur.
+        La fonction est appeler de base pour faire sortir le joueur
+        vu qu'aucune action n'est à faire si le joueur reste.
 
         Args:
             joueur (int): Le joueur en question.
             choix (int): Le choix en question (1 = sortir, 0 = rester). Par défaut à 1.
             
         Returns:
-            bool: Fin de manche
+            bool: Si fin de manche.
         """
         if self.joueursRestants == 0 :
-            return self.finManche()
+            return True
         if self.joueurs[joueur][2]==0 and choix==1:  # Si le joueur est encore en jeu et décide de sortir
             self.joueursRestants -= 1 
             self.joueurs[joueur][2] = 1  # On le sort de la mine
@@ -177,22 +197,6 @@ class Diamant:
                 self.tapis.pop(i)  # Retire la relique du tapis.
                 self.joueurs[joueursSorties[0]][1] += 1  # Ajoute la relique au joueur.
                 self.relique.append(joueursSorties[0])  # Ajoute le joueur à la liste des reliques
-            
-    def finManche(self, monstre = False) -> bool:
-        """
-        Applique tous les paramètres par défaut pour la création d'une nouvelle manche.
-        Affiche le vainqueur et le classement en cas de fin de partie.
-
-        Args:
-            monstre (bool, optional): Indique si un monstre est sorti 2 fois. Par défaut sur False.
-
-        Returns:
-            bool: Fin de la manche.
-        """
-        assert self.joueursRestants == 0 or monstre == True
-        self.joueursRestants = 0
-        if self.manchesRestants != 0:
-            return True
         
     def changementManche(self) -> None:
         """
@@ -232,16 +236,3 @@ class Diamant:
                     fin = True
                     classement.append([i,self.joueurs[i][0]])
         return classement
-
-    def caracteristiquesJoueur(self, joueur: int) -> list:
-        """
-        Récupère les caractéristiques d'un joueur en particulier.
-
-        Args:
-            joueur (int): Le joueur dont on veut récupérer les caractéristiques.
-
-        Returns:
-            list: Les caractéristiques du joueur.
-        """
-        assert joueur in self.joueurs.keys(), "Le joueur doit exister."
-        return self.joueurs[joueur]

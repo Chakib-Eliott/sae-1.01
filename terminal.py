@@ -70,7 +70,7 @@ def affichageCourant(instruction = '') -> None:
     print()
     print('{r}Contenu du tapis :{y}'.format(r=R,y=Y))
     for i in Jeu.tapis:
-        if i[1] <= 0:  # Affichage juste du nom de monstre.
+        if i[1] <= 0:  # Affichage juste du nom de piege.
             print(i[0])
         else:  # Affichage de la carte trésor et de son reste de diamant.
             print(i[0], ':', i[1])  
