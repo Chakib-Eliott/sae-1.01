@@ -4,8 +4,8 @@
 
 **Auteurs :** Eliott, Chakib  
 **Années :** 2022-2023   
-**GitHub :** [https://github.com/Chakib-Eliott/sae-1.01](https://github.com/Chakib-Eliott/sae-1.01)
-**IA liée au jeu :** [https://github.com/Chakib-Eliott/sae-1-02](https://github.com/Chakib-Eliott/sae-1-02)
+**GitHub :** [https://github.com/Chakib-Eliott/sae-1.01](https://github.com/Chakib-Eliott/sae-1.01)  
+**IA liée au jeu :** [https://github.com/Chakib-Eliott/sae-1-02](https://github.com/Chakib-Eliott/sae-1-02)  
 
 ## Sommaire
 
